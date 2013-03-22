@@ -1,4 +1,5 @@
 #!/usr/bin/tclsh
+
 package require http
 
 proc showState { fred } {
@@ -25,7 +26,7 @@ proc getCookies { varname } {
         }
     }
     return $cookies
-       }
+}
 
 
 proc showCookies { varname } {
@@ -45,7 +46,7 @@ proc getRedirectUrl { varname } {
         }
     }
     return $redirect_url
-       }
+}
 
 
 # ---------------------------------------------------------------------------
@@ -53,14 +54,14 @@ proc getRedirectUrl { varname } {
 #set url "http://tycho.usno.navy.mil/cgi-bin/timer.pl"
 #set url "http://www.largeformatphotography.info/forum/search.php"
 #set url "http://www.apug.org/forums/"
-       set url "http://www.apug.org/forums/search.php"
-       set query [http::formatQuery do getdaily days 30]
+set url "http://www.apug.org/forums/search.php"
+set query [http::formatQuery do getdaily days 30]
 #set url "http://www.r-project.org"
 
-           set redirectCount 0
-    while { $redirectCount < 3 && [info exists url] && [string length $url] } {
+set redirectCount 0
+while { $redirectCount < 3 && [info exists url] && [string length $url] } {
     set filename "body.html"
-    set bodyfile [ open $filename "w"]
+    set bodyfile [open $filename "w"]
 
     if { [info exists query] && 0 < [string length $query] } {
         set token [http::geturl $url -channel $bodyfile -query $query]
