@@ -52,11 +52,11 @@ int main(int argc, char* argv[])
         }
 
         if (af == AF_INET) {
-            struct sockaddr_in* sa = rp->ai_addr;
+            struct sockaddr_in* sa = (struct sockaddr_in*)rp->ai_addr;
             name = inet_ntop(af, &sa->sin_addr, buf, bufsize);
             printf("\tipv4: %s\n", name);
         } else if (af == AF_INET6) {
-            struct sockaddr_in6* sa = rp->ai_addr;
+            struct sockaddr_in6* sa = (struct sockaddr_in6*)rp->ai_addr;
             name = inet_ntop(af, &sa->sin6_addr, buf, bufsize);
             printf("\tipv6: %s\n", name);
         } else {
