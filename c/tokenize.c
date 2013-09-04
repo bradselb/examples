@@ -10,21 +10,24 @@
 // pack the tokens in the string. 
 // returns the number of tokens in the string.
 // assumes that s is a null terminated string. 
-int tokenize(char* buf, const char* delims)
+int tokenize(char* buf, size_t bufsize, const char* delims)
 {
     int token_count; // how many tokens were found
     char* begin; // points to first char in token
     char* end; // points to the first byte after token
     char* dest; // where this token is placed in result
+    size_t total_token_bytes; 
     size_t token_bytes; 
     size_t delim_bytes;
 
+    total_token_bytes = 0;
     token_count = 0;
     begin = buf;
     end = buf;
     dest = buf;
 
     while (begin && end && *end){
+	printf("count: %d, begin: %p, end: %p, dest: %p\n", token_count, begin, end, dest);
 	delim_bytes = strspn(end, delims);
 	begin = end + delim_bytes;
 	token_bytes = strcspn(begin, delims);
@@ -36,9 +39,11 @@ int tokenize(char* buf, const char* delims)
 	if (token_bytes != 0) {
 	    ++token_count;
 	}
+	total_token_bytes += token_bytes;
     }
 
-    size_t garbage_bytes = dest - buf;
+    size_t garbage_bytes = bufsize - (total_token_bytes + token_count);
+    printf ("garbage byte count: %lu\n", garbage_bytes);
     if (garbage_bytes) {
 	memset(dest, 0, garbage_bytes);
     }
@@ -58,7 +63,7 @@ int main(int argc, char* argv[])
 
     printf("original string: '%s'\n", buf);
 
-    tokens = tokenize(buf, delims);
+    tokens = tokenize(buf, sizeof(buf), delims);
     printf("tokenized string: '");
     for (int i = 0; i <bufsize; ++i) {
 	char c;
