@@ -26,52 +26,88 @@ int tokenize(char* buf, size_t bufsize, const char* delims)
     end = buf;
     dest = buf;
 
-    while (begin && end && *end){
-	printf("count: %d, begin: %p, end: %p, dest: %p\n", token_count, begin, end, dest);
-	delim_bytes = strspn(end, delims);
-	begin = end + delim_bytes;
-	token_bytes = strcspn(begin, delims);
-	end = begin + token_bytes;
-	memmove(dest, begin, token_bytes);
-	dest = dest + token_bytes;
-	*dest = 0;
-	++dest;
-	if (token_bytes != 0) {
-	    ++token_count;
-	}
-	total_token_bytes += token_bytes;
+    printf("count: %d, begin: %p, end: %p, dest: %p\n", token_count, begin, end, dest);
+    delim_bytes = strspn(end, delims);
+    while (end - buf < bufsize) {
+        printf("delim_bytes: %lu, ", delim_bytes);
+        begin = end + delim_bytes;
+        if (0 == *begin) break;
+        token_bytes = strcspn(begin, delims);
+        printf("token_bytes: %lu\n", token_bytes);
+        end = begin + token_bytes;
+        delim_bytes = strspn(end, delims);
+        memmove(dest, begin, token_bytes);
+        dest = dest + token_bytes;
+        *dest = 0;
+        ++dest;
+        if (token_bytes != 0) {
+            ++token_count;
+        }
+        total_token_bytes += token_bytes;
+        printf("count: %d, begin: %p, end: %p, dest: %p\n", token_count, begin, end, dest);
     }
 
     size_t garbage_bytes = bufsize - (total_token_bytes + token_count);
     printf ("garbage byte count: %lu\n", garbage_bytes);
     if (garbage_bytes) {
-	memset(dest, 0, garbage_bytes);
+        memset(dest, 0, garbage_bytes);
     }
 
     return token_count;
 }
 
+int init_argv(char** argv, int argc, const char* buf, size_t bufsize)
+{
+    int i;
+    size_t offset;
+
+    i = 0;
+    offset = 0;
+
+    while (i < argc && offset < bufsize && buf[offset]) {
+        argv[i] = (char*)(buf + offset);
+        offset = offset + strlen(argv[i]) + 1;
+        ++i;
+    }
+    argv[i] = 0;
+
+    return i;
+}
+
 
 int main(int argc, char* argv[])
 {
-    char buf[] = " this test : =   string,has six   tokens;\n";
     char delims[] = ";, \t:=\n";
+    //char buf[] = "this;test=string,has six:tokens";
+    char buf[] = " this test : =   string,has six   tokens;\n";
+    //char buf[] = "token";
     int bufsize = 1 + strlen(buf);
-    int tokens = 0;
+    int token_count = 0;
+
+    char* token_vec[10];
+    size_t max_token_count = (sizeof token_vec / sizeof token_vec[0]) - 1;
+    memset(token_vec, 0, sizeof token_vec);
 
     printf("delimiters: '%s'\n", delims);
 
     printf("original string: '%s'\n", buf);
 
-    tokens = tokenize(buf, sizeof(buf), delims);
+    token_count = tokenize(buf, sizeof(buf), delims);
     printf("tokenized string: '");
     for (int i = 0; i <bufsize; ++i) {
-	char c;
-	c = buf[i];
-	if (c == 0) c = '0';
-	putchar(c);
+        char c;
+        c = buf[i];
+        if (c == 0) c = '0';
+        putchar(c);
     }
-    printf("' contains %d tokens.\n", tokens);
+    printf("' contains %d tokens.\n", token_count);
+
+    token_count = init_argv(token_vec, max_token_count, buf, bufsize);
+
+    for(int i = 0; i < token_count; ++i) {
+        printf("argv[%d] = %p \t'%s'\n", i, token_vec[i], token_vec[i]);
+    }
+
 
     return 0;
 }
