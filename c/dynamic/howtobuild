@@ -1,0 +1,24 @@
+note that the executable is completely independent of the library.
+the two can be build separately and for example, expanding the library 
+does not require the executable to be re-built. 
+
+---compile and link the executable:
+gcc -rdynamic -o tryfuncs tryfuncs.c -ldl
+
+--- it can be verified that the executable doe snot depend upon the library...
+ldd tryfuncs
+
+
+building the library is a multi-step process...
+first compile the various source files....
+gcc -c -fpic -o funcs.o funcs.c 
+
+---- then, link
+gcc -shared -Wl,-soname,libfuncs.so -o libfuncs.so.1 -lc funcs.o
+  --- or ---
+ld -shared -soname libfuncs.so -o libfuncs.so.1 -lc funcs.o 
+
+
+--- finally, it seems necessary to advise the loader of the new dynamically linked library 
+sudo ldconfig -v -n /home/bselbrede/examples/shared/
+

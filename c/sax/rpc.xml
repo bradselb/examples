@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>examples.getStateName</methodName>
+  <params>
+    <param type="int" name="eggCount" val="40"/>
+    <param><value><int>17</int></value></param>
+    <param><value><double>2.78</double></value></param>
+  </params>
+</methodCall>
+
