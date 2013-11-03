@@ -8,9 +8,8 @@ set CheckIp(done) 0
 
 proc sendHttpGetRequest { chan host resource } { 
    puts $chan "GET $resource HTTP/1.1"
-   #puts $chan "From: bks62464@yahoo.com"
    puts $chan "User-agent: a simple Tcl script by Bradley K. Selbrede"
-   #puts $chan "Connection: close"
+   puts $chan "Connection: close"
    puts $chan "Host: $host"
    puts $chan ""
 }
@@ -19,13 +18,13 @@ proc receiveHttpReply { chan } {
    global CheckIp
    if { [eof $chan] || [catch {gets $chan reply}] } {
       close $chan
-      set CheckIp(done) 1
    } else {
       # interesting debug info
-      puts "$reply" 
+      # puts "$reply" 
       set matches [regexp -nocase -expanded  {([\d]+[\.][\d]+[\.][\d]+[\.][\d]+)}  $reply where addr]
       if { 0 < $matches } { 
          set CheckIp(myIp)  "$addr" 
+         set CheckIp(done) 1
       }
    }
 }
@@ -39,11 +38,10 @@ proc checkIp { } {
 
    after 10000 set CheckIp(done) {timeout}
    vwait CheckIp(done)
-   return $CheckIp(myIp)
+   return $CheckIp(done)
 }
 
-#set timestamp [clock format [clock seconds] -format {%d-%b-%Y %H:%M:%S}]
-#puts stdout "$timestamp [checkIp]"
 checkIp
-puts stdout "$CheckIp(done)"
+# set timestamp [clock format [clock seconds] -format {%d-%b-%Y %H:%M:%S}]
+# puts stdout "$timestamp $CheckIp(myIp)"
 puts stdout "$CheckIp(myIp)"
