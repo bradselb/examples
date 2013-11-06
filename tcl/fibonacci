@@ -1,0 +1,20 @@
+#! /usr/bin/tclsh
+puts "\n\n"
+set phi [expr { 0.5 * (1 + sqrt(5))}]
+puts "the golden ratio is: $phi"
+
+set i 0
+set j 1
+
+puts $i
+puts $j
+
+set k 1
+while { $k < 1e6 } {
+   set p [expr { double($k) / double($j) }]
+   set delta [expr { $phi - $p }]
+   puts "$k, $p, $delta"
+   set i $j
+   set j $k
+   set k [expr { $i + $j }]
+}
