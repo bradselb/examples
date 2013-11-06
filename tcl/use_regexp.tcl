@@ -1,3 +1,5 @@
+#! /usr/bin/tclsh 
+
 set tclver [info tcl]
 puts "tcl version $tclver"
 
