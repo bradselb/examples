@@ -1,7 +1,7 @@
 #! /usr/bin/tclsh 
 
 package require udp
-set port {62464}
+set port {9}
 
 proc logPacket { host_info msg } {
    set timestamp [clock format [clock seconds] -format {%d.%m.%Y %H:%M:%S}]
@@ -25,7 +25,7 @@ proc udp_listen {port} {
    set sock [udp_open $port]
    fconfigure $sock -buffering none -translation binary
    fileevent $sock readable [list ::handleUdpMessage $sock]
-   puts "Listening on udp port: [fconfigure $sock -myport]"
+   #puts "Listening on udp port: [fconfigure $sock -myport]"
    return $sock
 }
 
