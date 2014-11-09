@@ -1,47 +1,43 @@
 #! /usr/bin/tclsh
 
-set CheckIp(host) {checkip.dyndns.org}
-set CheckIp(resource) {/}
-set CheckIp(port) {http}
-set CheckIp(myIp) {127.0.0.1}
-set CheckIp(done) 0
+package require http
 
-proc sendHttpGetRequest { chan host resource } { 
-   puts $chan "GET $resource HTTP/1.1"
-   puts $chan "User-agent: a simple Tcl script by Bradley K. Selbrede"
-   puts $chan "Connection: close"
-   puts $chan "Host: $host"
-   puts $chan ""
+#set CheckIp(url) {http://checkip.dyndns.org}
+#set CheckIp(timeout) 1000 ; # milliseconds
+#set CheckIp(myIp) {127.0.0.1}
+#set CheckIp(done) 0
+
+array set CheckIp {
+    url {http://checkip.dyndns.org:8245}
+    timeout 5000
+    myIp 127.0.0.1
+    done 0
 }
 
-proc receiveHttpReply { chan } {
-   global CheckIp
-   if { [eof $chan] || [catch {gets $chan reply}] } {
-      close $chan
-   } else {
-      # interesting debug info
-      # puts "$reply" 
-      set matches [regexp -nocase -expanded  {([\d]+[\.][\d]+[\.][\d]+[\.][\d]+)}  $reply where addr]
-      if { 0 < $matches } { 
-         set CheckIp(myIp)  "$addr" 
-         set CheckIp(done) 1
-      }
-   }
+set token [::http::geturl $CheckIp(url) -timeout $CheckIp(timeout)]
+#upvar #0 $token state
+
+set status [::http::status $token]
+# puts  "$status"
+
+set body [::http::data $token]
+# puts stderr "$body"
+
+http::cleanup $token
+
+if {[string match -nocase {ok} $status]} {
+    set expression {([\d]+[\.][\d]+[\.][\d]+[\.][\d]+)}
+    set count [regexp -nocase -expanded $expression $body all addr]
+    # puts stderr "match count: $count"
+    # puts stderr "address match: '$addr'"
+    if {[expr {$count > 0}]} {
+        set CheckIp(myIp) $addr
+    } else {
+        puts stderr "could not find an IP address in the http response"
+        puts stderr "$body"
+    }
+} else {
+    puts stdout "http status: $status"
 }
 
-proc checkIp { } {
-   global CheckIp
-   set sock [socket -async $CheckIp(host) $CheckIp(port)]
-   fconfigure $sock -blocking 0 -buffering line
-   fileevent $sock readable [list receiveHttpReply $sock]
-   fileevent $sock writable [list sendHttpGetRequest $sock $CheckIp(host) $CheckIp(resource)]
-
-   after 10000 set CheckIp(done) {timeout}
-   vwait CheckIp(done)
-   return $CheckIp(done)
-}
-
-checkIp
-# set timestamp [clock format [clock seconds] -format {%d-%b-%Y %H:%M:%S}]
-# puts stdout "$timestamp $CheckIp(myIp)"
 puts stdout "$CheckIp(myIp)"
