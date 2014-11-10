@@ -11,7 +11,6 @@ array set CheckIp {
     url {http://checkip.dyndns.org:8245}
     timeout 5000
     myIp 127.0.0.1
-    done 0
 }
 
 set token [::http::geturl $CheckIp(url) -timeout $CheckIp(timeout)]
