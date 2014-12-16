@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     graph_add_edge(graph, 1, 3, 3);
     graph_add_edge(graph, 2, 1, 5);
     graph_add_edge(graph, 2, 4, 6);
-    graph_add_edge(graph, 4, 3, 1);
+    graph_add_edge(graph, 3, 4, 1);
 
     graph_add_edge(graph, 0, 1, 2);
     graph_add_edge(graph, 0, 1, 2);

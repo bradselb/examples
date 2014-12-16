@@ -46,8 +46,12 @@ static int insert_node(struct node* head, struct node* node)
 
     p = head;
     while (p != 0) {
+        // duplicate edges are not allowed
         if (p->next && p->next->nr == node->nr) {
-            // no duplicate edges
+            break;
+        }
+        // edges that start and end on same vertex are not allowed. 
+        if (p->nr == node->nr) {
             break;
         }
         
