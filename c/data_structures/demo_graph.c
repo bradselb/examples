@@ -1,3 +1,5 @@
+// gcc -o demo_graph -std=c99 graph.c demo_graph.c
+
 #include <stdio.h>
 #include <stdlib.h>
 
