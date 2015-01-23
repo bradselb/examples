@@ -2,27 +2,31 @@
 import time
 import urllib2
 import json
-
+import sys
 
 # The POST method does not work here so, use a GET instead.
 base_url = 'http://acerail.com/CMSWebParts/ACERail/TrainStatusService.aspx'
 get_vehicles_url = base_url + '?service=get_vehicles'
 get_stops_url =  base_url + '?service=get_stops'
-# print(get_vehicles_url)
 
 # fetch the info from ACE website / webservice
 f = urllib2.urlopen(get_vehicles_url)
 s = f.read()
-vehicles = json.loads(s)
+#print ("%s" % vehicles)
+if s and len(s):
+    vehicles = json.loads(s)
+else:
+    print("Failed to load vehicles. Exiting.")
+    sys.exit(1)
 
 f = urllib2.urlopen(get_stops_url)
 s = f.read()
-stops = json.loads(s)
-
-f.close()
-
 #print ("%s" % stops)
-#print ("%s" % vehicles)
+if s and len(s):
+    stops = json.loads(s)
+else:
+    print("Failed to load stops. Exiting.")
+    sys.exit(1)
 
 
 # create a dictionary that maps stop id to name
@@ -53,7 +57,7 @@ for vehicle in vehicles['get_vehicles']:
         eid = vehicle['equipmentID']
         receiveTime = vehicle['receiveTime'] / 1000 # seconds since epoc
         tm = time.strftime(timeformat, time.gmtime(receiveTime))
-        print('%s UTC, %s, %s, %s' % (tm, eid, vehicle['lat'], vehicle['lng']))
+        print('%s, %s UTC, %s, %s' % (eid, tm, vehicle['lat'], vehicle['lng']))
 
         for stop in vehicle[u'minutesToNextStops']:
         	if (stop['minutes'] != None):
