@@ -22,7 +22,11 @@ int main(int argc, char* argv[])
         /* iterate over characters in file */
         prev_ch = 0;
         while (EOF != (ch = fgetc(file))) {
-            if (ch != CR && (ch != LF || prev_ch != LF)) {
+            if (ch == CR) {
+                ch = LF;
+            }
+
+            if (ch != LF || prev_ch != LF) {
                 fputc(ch, stdout);
             }
             prev_ch = ch;
