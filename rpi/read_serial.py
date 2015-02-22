@@ -27,11 +27,11 @@ while True:
 
                 if (ch == '\n'):
                     if (0 == line.find("$GPGGA")) or (0 == line.find("$GPRMC")):
-                        print(line)
+                        # print(line)
                         f.write(line)
                         line_count += 1
                     line = ""
 
 
-    time.sleep(30)
+    time.sleep(29)
 
