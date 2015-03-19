@@ -1,0 +1,61 @@
+Some years ago, I applied to an Embedded Software Engineer position at a 
+medical device company in Sunnyvale, California. Prior to the first round
+of on site interviews, they sent me a programming challenge.  This is my
+response to the challenge.
+
+The task was described in a two page document. The gist of the assignment is
+roughly as follows: 
+
+Consider a motor and gearbox assembly with two sensors - an incremental encoder
+and a potentiometer. Given the name of a plain text data file with three columns,
+open the file, read the data, and determine if there is an 'error'. If there is
+an error, report it and the time at which it occurs. 
+
+Details: 
+1. There is a 30:1 gear reduction between the encoder and the potentiometer.
+2. The encoder outputs 2048 counts per revolution of the motor 
+3. The potentiometer reading is a sawtooth wave with amplitude of 5.0vdc. The
+   period of the sawtooth is the same as that of the output shaft. 
+4. The three columns of the data are time, encoder, potentiometer
+5. There are no errors in the first 0.5 seconds of data.
+6. There are three data sets to try but the program will be tested against 
+   other data sets as well. Your program must take a filename as a command 
+   line argument. The file named "perfect.txt" contains sensor readings with
+   no errors. The data set in the file named, "normal.txt" represnts normal
+   sensor output with noise. The data set in the file named, "error.txt" has 
+   has an error in the sensor output. 
+7. You are to limit yourself to one hour. 
+8. You must code in straight 'c' and cannot depend on anything other than
+   the standard library.
+
+
+
+Assumptions:
+1) error is defined as a discrepancy of some magnitude between the angular
+   position of the input shaft and that of the output shaft.
+
+2) cannot load entire data into memory - this data would normally come in 
+   a continuous stream. 
+
+
+Notes: 
+I did this work back in early 2011. The coding style differs slightly from my
+current style but not significantly. I was also working quickly so, for 
+example, I left bare naked magic numbers in the sources. The sources here are
+unmodified. Except for this README file and the makefile, what you see here 
+is exactly what I submitted. The makefile was recently added for convenience. 
+I am purposely being vague about the company but, if you get this same
+assignment, know that in this particular case, you should NOT feel free to 
+leverage what I've done. Nor should you present my work or any derivative of
+it as your own. I spent an hour writing this code. I spent about a half hour 
+getting my head around the problem and doing a back of the envelope design.
+
+Further Thoughts:
+The criterion used in this code to determin if the data stream represents an 
+error is very primative. Were I given this assignmnet at work, I think it 
+would be interesting / useful to develop a more elaborate failure criterion. 
+For example, it would be interesting to look at the distribution of the
+differences between observed and predicted. 
+
+
+
