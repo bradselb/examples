@@ -12,7 +12,7 @@ with serial.Serial(port="/dev/ttyAMA0", baudrate=9600) as in_port:
             out_port.write(ch)
 
             if (ch is '$'):
-                print(line)
+                print(line),
                 line = '$'
             else:
                 line += ch
