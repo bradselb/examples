@@ -13,25 +13,22 @@ if not os.path.exists(filename):
     f = open(filename, "w")
     f.close()
 
-while True:
-    with serial.Serial(port="/dev/ttyAMA0", baudrate=9600) as port:
-        with open(filename, "a") as f:
-
+with serial.Serial(port="/dev/ttyAMA0", baudrate=9600) as port:
+    with open(filename, "a") as f:
+#        while True:
             line_count = 0
             line = ""
-            while line_count < 10:
+            while line_count < 100:
                 ch = port.read(1)
 
                 if (ch != '\r'):
                     line += ch
 
                 if (ch == '\n'):
-                    if (0 == line.find("$GPGGA")) or (0 == line.find("$GPRMC")):
-                        # print(line)
-                        f.write(line)
-                        line_count += 1
+                    print(line),
+                    f.write(line)
+                    line_count += 1
                     line = ""
 
-
-    time.sleep(29)
+#    time.sleep(29)
 
