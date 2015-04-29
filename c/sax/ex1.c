@@ -92,7 +92,7 @@ void saxStartElement(void *ctx, xmlChar const* name, xmlChar const* *atts)
    if ( atts ) {
       printf("attributes: \n");
       for (int i=0; atts[i]!=0 && atts[1+i]!=0; i+=2 )  {
-	 printf("\t[%d] '%s' : '%s'\n", i, atts[i], atts[i+1]);
+         printf("\t[%d] '%s' : '%s'\n", i, atts[i], atts[i+1]);
       }
    }
 }
