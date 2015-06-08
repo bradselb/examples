@@ -23,7 +23,7 @@ int bisect(int32_t lower, int32_t upper, int32_t ans, int32_t* guess)
     // enforce the invariant (that lower is NOT erased)
     if (is_erased(lower, ans)) {
         upper = lower; // this will make while loop get skipped.
-        // and we'll fall oout of the function with 
+        // and we'll fall out of the function with 
     }
 
     n = 0;
