@@ -18,8 +18,8 @@ $ ./strsep '$GLGSV,3,1,11,74,42,053,,66,16,296,,82,,,,73,03,019,*5B'
 
 int main(int argc, char* argv[])
 {
-    const char* delims = ",;:";
-    const char* empty = "empty";
+    const char* delims = ",;:*";
+    const char* empty = "<empty>";
     char** argp;
     char* token;
     char* p;
