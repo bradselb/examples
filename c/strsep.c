@@ -16,8 +16,8 @@
 
 int main(int argc, char* argv[])
 {
-    const char* delims = ",;:";
-    const char* empty = "empty";
+    const char* delims = ",;:*";
+    const char* empty = "<empty>";
     char** argp;
     const char* token;
     char* p;
