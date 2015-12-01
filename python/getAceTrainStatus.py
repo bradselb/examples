@@ -3,6 +3,7 @@ import time
 import urllib2
 import json
 import sys
+from operator import itemgetter
 
 # The POST method does not work here so, use a GET instead.
 base_url = 'http://acerail.com/CMSWebParts/ACERail/TrainStatusService.aspx'
@@ -12,18 +13,19 @@ get_stops_url =  base_url + '?service=get_stops'
 # fetch the info from ACE website / webservice
 f = urllib2.urlopen(get_vehicles_url)
 s = f.read()
-#print ("%s" % vehicles)
 if s and len(s):
-    vehicles = json.loads(s)
+    d = json.loads(s)
+    vehicles = sorted(d['get_vehicles'], key=itemgetter('equipmentID'))
+#    print ("%s" % vehicles)
 else:
     print("Failed to load vehicles. Exiting.")
     sys.exit(1)
 
 f = urllib2.urlopen(get_stops_url)
 s = f.read()
-#print ("%s" % stops)
 if s and len(s):
     stops = json.loads(s)
+#    print ("%s" % stops)
 else:
     print("Failed to load stops. Exiting.")
     sys.exit(1)
@@ -36,32 +38,42 @@ for d in stops['get_stops']:
 
 
 timeformat = '%Y-%m-%d %H:%M:%S'
-timestamp = time.strftime(timeformat)
+timenow = time.strftime(timeformat)
 
 print('')
-for vehicle in vehicles['get_vehicles']:
+for vehicle in vehicles:
+    eid = vehicle.get('equipmentID', '?')
+    lat = vehicle['lat']
+    lon = vehicle['lng']
+    receiveTime = vehicle['receiveTime']/1000 # seconds since epoc
+    timereceive = time.strftime(timeformat, time.gmtime(receiveTime))
+
+    print('%s' % (eid))
+    print('%s UTC' % (timereceive))
+    print('%.6f, %.6f' % (lat, lon))
+    print('')
+
+
+print('')
+for vehicle in vehicles:
+    inservice = vehicle['inService']
+    n = vehicle['scheduleNumber']
+    t = vehicle.get('onSchedule', 0)
+    eid = vehicle.get('equipmentID', '?')
     if vehicle['inService']:
-        print('%s' % timestamp)
-
-        n = vehicle['scheduleNumber']
-        t = vehicle['onSchedule']
-        if (t ==0):
-        	print('Train #%s is on time' % n)
+        print('%s' % (timenow))
+        if (t == 0):
+        	print('Train #%s (%s) is on time' % (n, eid))
         elif (t < 0):
-        	print('Train #%s is %s minutes late' % (n, -t))
+        	print('Train #%s (%s) is %s minutes late' % (n, eid, -t))
         elif (t > 0):
-        	print('Train #%s is %s minutes early' % (n, t))
+        	print('Train #%s (%s) is %s minutes early' % (n, eid, t))
         else:
-        	print('Train #%s' % n)        	
-
-        eid = vehicle['equipmentID']
-        receiveTime = vehicle['receiveTime'] / 1000 # seconds since epoc
-        tm = time.strftime(timeformat, time.gmtime(receiveTime))
-        print('%s, %s UTC, %s, %s' % (eid, tm, vehicle['lat'], vehicle['lng']))
+        	print('Train #%s (%s)' % (n, eid))
 
         for stop in vehicle[u'minutesToNextStops']:
         	if (stop['minutes'] != None):
-        		print('\t%s in %s minutes (%s)' % (stopName[stop['stopID']], stop['minutes'], stop['time']))
+        		print('  %s in %s minutes (%s)' % (stopName[stop['stopID']], stop['minutes'], stop['time']))
         print('\n')
 
 
