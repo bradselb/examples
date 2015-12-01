@@ -9,12 +9,11 @@ set done {0}
 proc send {sock} {
     global addr
     global port
+
     puts -nonewline $sock "GET /query/apps HTTP/1.1\r\n"
     puts -nonewline $sock "Host: $addr:$port\r\n"
-    puts -nonewline $sock "User-Agent: myscript\r\n"
-    puts -nonewline $sock "Accept */*\r\n"
+    puts -nonewline $sock "Accept: */*\r\n"
     puts -nonewline $sock "\r\n"
-#    puts $sock 
 }
 
 
@@ -27,12 +26,11 @@ proc rcv {sock} {
 
 
 set sock [socket $addr $port]
-fconfigure $sock -buffering line -translation binary
-::send $sock
+fconfigure $sock -buffering none -translation binary
 fileevent $sock readable [list ::rcv $sock]
 
-vwait done
+::send $sock
 
-puts "done"
+vwait done
 close $sock
 
