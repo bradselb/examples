@@ -41,7 +41,7 @@ for vehicle in vehicles:
     receiveTime = vehicle['receiveTime']/1000 # seconds since epoc
     timereceive = time.strftime(timeformat, time.gmtime(receiveTime))
 
-    print('%s, %.6f, %.6f, %s UTC' % (eid, lat, lon, timereceive))
+    print('%s, %.6f, % 11.6f , %s UTC' % (eid, lat, lon, timereceive))
 
 
 print('')
