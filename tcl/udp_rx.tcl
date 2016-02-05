@@ -3,7 +3,7 @@
 package require udp
 set port {9}
 
-proc logPacket { host_info msg } {
+proc logPacket {host_info msg} {
    set timestamp [clock format [clock seconds] -format {%d.%m.%Y %H:%M:%S}]
    set f [open "ReceivedUdpMessage.log" a]
    puts  "$timestamp $host_info $msg"
@@ -11,7 +11,7 @@ proc logPacket { host_info msg } {
    close $f
 }
 
-proc handleUdpMessage { sock } {
+proc handleUdpMessage {sock} {
    global t
    set packet [read $sock]
    set peer [fconfigure $sock -peer]
@@ -25,7 +25,7 @@ proc udp_listen {port} {
    set sock [udp_open $port]
    fconfigure $sock -buffering none -translation binary
    fileevent $sock readable [list ::handleUdpMessage $sock]
-   #puts "Listening on udp port: [fconfigure $sock -myport]"
+   puts "Listening on udp port: [fconfigure $sock -myport]"
    return $sock
 }
 
