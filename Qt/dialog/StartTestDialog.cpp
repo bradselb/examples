@@ -1,11 +1,10 @@
-#include "StartTestDialog.h"
 
-#include <QtGui>
+#include "StartTestDialog.h"
+#include <QtGui> // this includes *EVERYTHING*
 
 
 StartTestDialog::StartTestDialog()
 {
-    m_groupBox = new QGroupBox(tr("DUT Information"));
 
     m_typeLabel = new QLabel(tr("Type:"));
     m_lotNrLabel = new QLabel(tr("Lot Number:"));
@@ -20,6 +19,7 @@ StartTestDialog::StartTestDialog()
     formlayout->addRow(m_lotNrLabel, m_lotNrLineEdit);
     formlayout->addRow(m_serialNrLabel, m_serialNrLineEdit);
 
+    m_groupBox = new QGroupBox(tr("DUT Information"));
     m_groupBox->setLayout(formlayout);
 
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
@@ -36,6 +36,5 @@ StartTestDialog::StartTestDialog()
 
     return;
 }
-
 
 
