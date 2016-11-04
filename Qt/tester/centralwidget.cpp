@@ -37,16 +37,23 @@ CentralWidget::CentralWidget()
     testResultsLayout->addRow(m_secondResultLabel, m_secondResultLineEdit);
     testResultsLayout->addRow(m_thirdResultLabel, m_thirdResultLineEdit);
 
+    m_testResultsGroupBox = new QGroupBox(tr("Test Results"));
+    m_testResultsGroupBox->setLayout(testResultsLayout);
+
     // push buttons
     m_startButton = new QPushButton("&Start", this);
     m_cancelButton = new QPushButton("Cancel", this);
-    buttonLayout = newQHBoxLayout();
-    buttonLayout->addWidget(m_startButton)
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    buttonLayout->addWidget(m_startButton);
+    buttonLayout->addWidget(m_cancelButton);
+
+    m_buttonGroupBox = new QGroupBox(tr("Test Results"));
+    m_buttonGroupBox->setLayout(buttonLayout);
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     mainLayout->addWidget(m_dutInfoGroupBox);
     mainLayout->addWidget(m_testResultsGroupBox);
-    mainLayout->addWidget(buttonLayout);
+    mainLayout->addWidget(m_buttonGroupBox);
 
     this->setLayout(mainLayout);
 
@@ -60,13 +67,13 @@ CentralWidget::CentralWidget()
 
 
 // slots...
-CentralWidget::start()
+void CentralWidget::start()
 {
     emit this->startTest();
 }
 
 
-CentralWidget::abort()
+void CentralWidget::abort()
 {
     emit this->abortTest();
 }

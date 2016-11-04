@@ -17,14 +17,14 @@ public:
     CentralWidget();
 
 
-public signals:
+signals:
     void startTest();
     void abortTest();
 
 
 private slots:
     void start();
-    void cancel();
+    void abort();
 
 
 private: // member functions
@@ -50,9 +50,9 @@ private: // data members
 //    QLabel* m_thirdPassFailIndicatorLabel;
 
 
-//    QGroupBox* m_buttonGroupBox;
+    QGroupBox* m_buttonGroupBox;
     QPushButton* m_startButton;
-    QPushButton* m_cancelButton
+    QPushButton* m_cancelButton;
 
 
 };
