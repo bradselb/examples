@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform>
+
+<PythonScriptRunner script_path=".\\scripts\\python" write_pyc_files="false">
+  <pythonpath>$PROJECT_PATH</pythonpath>
+  <pythonpath>$PROJECT_PATH/python$PYTHON_VERSIONbin</pythonpath>
+  <pythonpath>$PROJECT_PATH\..\InstrumentDrivers</pythonpath>
+  <pythonpath>$PYTHONHOME</pythonpath>
+  <pythonpath>$PYTHONHOME\Lib</pythonpath>
+  <pythonpath>$PYTHONHOME\bin</pythonpath>
+  <pythonpath>$PYTHONHOME\DLLs</pythonpath>
+  <pythonpath>$PYTHONHOME\Lib\site-packages</pythonpath>
+  <pythonpath>$PYTHONHOME\Lib\site-packages\win32</pythonpath>
+  <pythonpath>$PYTHONHOME\Lib\site-packages\win32\lib</pythonpath>
+  <pythonpath>$PYTHONHOME\Lib\site-packages\win32com</pythonpath>
+  <pythonpath>$PYTHONHOME\Lib\site-packages\win32comext</pythonpath>
+  <pythonpath>$PROJECT_PATH\..\Common</pythonpath>
+</PythonScriptRunner>
+
+</platform>
