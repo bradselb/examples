@@ -1,0 +1,15 @@
+Almost ten years have passed since the last time I worked with the Qt library.
+I recently picked up a project that involves doing a "nice GUI" on Windows.
+The Qt library and tools make doing gui development in C++ quite pleasurable. 
+
+
+Yeah...so, anyway, this example is me working an example in the QT Designer 
+documentation. The goal here was to refresh the memory a little bit. 
+
+Steps: 
+1. create a ui 'Form" in Designer. The form supplies the specifics about what 
+   widgets are on the uo and how their signals and slots are connected. 
+2. create a class that inherits from one of the standard Qt widgets.
+3. let one of the private data members of this class be the ui form. 
+4. I guess the wrapper class could also have it's own sinals and slots... (!)
+
