@@ -2,8 +2,8 @@
 #define MY_UDP_CLIENT_H
 
 #include <QObject>
-//#include <QUdpSocket>
 
+class QString;
 class QUdpSocket;
 class QTimerEvent;
 
@@ -11,9 +11,14 @@ class Client: public QObject
 {
     Q_OBJECT
 
+    signals:
+        void bailout();
+
     public:
         Client(QObject* parent=0);
         ~Client();
+
+        void connectToHost(QString const& name, int port);
 
     public slots:
         void onReadyRead();
@@ -23,7 +28,7 @@ class Client: public QObject
 
     private:
         QUdpSocket* m_sock;
-        char *m_buf;
+        char* m_buf;
         const int m_bufsize;
         int m_timerId;
 };
