@@ -3,16 +3,12 @@
 #include <QTcpServer>
 #include <QHostAddress>
 #include <QTcpSocket>
-#include <QPushButton>
-#include <QLabel>
+#include <QList>
 
-#include <stdio.h>
 
-Server::Server(QWidget* parent, quint16 port)
-: QDialog(parent), m_tcpServer(0)//, m_label(new QLabel), m_button(new QPushButton(tr("Quit")))
+Server::Server(quint16 port, QObject* parent)
+: QObject(parent), m_tcpServer(0), m_clients()
 {
-//    m_button->setAutoDefault(false);
-//    m_button->show();
 
     m_tcpServer = new QTcpServer(this);
     if (m_tcpServer) {
@@ -20,7 +16,6 @@ Server::Server(QWidget* parent, quint16 port)
         m_tcpServer->listen(QHostAddress::Any, port);
     }
     connect(m_tcpServer, SIGNAL(newConnection()), this, SLOT(handleConnection()));
-    fprintf(stderr, "Server constructed\n");
 }
 
 Server::~Server()
@@ -31,25 +26,52 @@ Server::~Server()
     }
 }
 
+//    quint64 byteCount;
+
 void Server::handleConnection()
 {
     QTcpSocket* client;
-    quint64 byteCount;
-    char buf[1024];
-
-    fprintf(stderr, "handleConnnection()\n");
-
     client = m_tcpServer->nextPendingConnection();
-    connect(client, SIGNAL(disconnected()), client, SLOT(deleteLater()));
-    byteCount = client->readLine(buf, sizeof buf);
-    fprintf(stderr, "handleConnnection(), byteCout: %lld\n", byteCount);
-    if (byteCount != -1) {
-        // a message has been received.
-        //processMessage(buf);
-        fprintf(stderr, "%s\n", buf);
-//        m_label->setText(QString(buf));
-//        m_label->show();
-        client->write(buf);
-    }
-
+    connect(client, SIGNAL(disconnected()), this, SLOT(onClientDisconnect()));
+    connect(client, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    m_clients.push_back(client);
+    return;
 }
+
+
+void Server::onReadyRead()
+{
+    QList<QTcpSocket*>::iterator client;
+    for (client = m_clients.begin(); client != m_clients.end(); ++client) {
+        char buf[1024];
+        //qint64 available_byte_count = client->bytesAvailable();
+        if ((*client)->canReadLine()) {
+            int length = (*client)->readLine(buf, sizeof buf);
+            if (length > 0) {
+                (*client)->write(buf); // just echo it back for now. 
+                QString cmd =  QString(buf) ;
+                if (cmd.startsWith("quit", Qt::CaseInsensitive)) {
+                    emit quit();
+                }
+            }
+        }
+    }
+    return;
+}
+
+
+void Server::onClientDisconnect()
+{
+    QTcpSocket* client;
+    for (int i=0; i<m_clients.count(); ++i) {
+        if (m_clients.at(i)->state() != QAbstractSocket::ConnectedState) {
+            // found one that is not connected...
+            client = m_clients.takeAt(i); // removes it form the container.
+            client->disconnect();
+            client->deleteLater();
+        }
+    }
+}
+
+
+

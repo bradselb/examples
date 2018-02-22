@@ -1,18 +1,16 @@
-#include <QApplication>
+#include <QCoreApplication>
 #include <QtCore>
 
-#include <stdlib.h>
-#include <stddef.h>
 
 #include "server.h"
 
 
 int main(int argc, char* argv[])
 {
-    QApplication app(argc, argv);
-    Server server;
-    server.show();
-    server.exec();
-    return 0;
+    QCoreApplication app(argc, argv);
+    Server server(7000, &app);
+    QObject::connect(&server, SIGNAL(quit()), &app, SLOT(quit()));
+    int rc = app.exec();
+    return rc;
 }
 

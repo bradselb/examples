@@ -2,28 +2,30 @@
 #define SERVER_H
 
 #include <QObject>
-#include <QDialog>
+#include <QList>
 
 class QTcpServer;
-class QLabel;
-class QPushButton;
+class QTcpSocket;
 
-class Server : public QDialog
+class Server : public QObject
 {
   Q_OBJECT
 
   public:
-    Server(QWidget* parent=0, quint16 port=7000);
+    Server(quint16 port=7000, QObject* parent=0);
     ~Server();
+
+  signals:
+    void quit();
 
   private slots:
     void handleConnection();
+    void onReadyRead();
+    void onClientDisconnect();
 
   private:
     QTcpServer* m_tcpServer;
-    QLabel* m_label;
-    QPushButton* m_button;
-
+    QList<QTcpSocket*> m_clients;
 };
 
 
