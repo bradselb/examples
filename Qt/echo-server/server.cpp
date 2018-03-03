@@ -41,14 +41,15 @@ void Server::handleConnection()
 
 void Server::onReadyRead()
 {
-    QList<QTcpSocket*>::iterator client;
-    for (client = m_clients.begin(); client != m_clients.end(); ++client) {
-        char buf[1024];
-        //qint64 available_byte_count = client->bytesAvailable();
-        if ((*client)->canReadLine()) {
-            int length = (*client)->readLine(buf, sizeof buf);
+    char buf[1024];
+    QTcpSocket* client;
+
+    for (int i=0; i<m_clients.count(); ++i) {
+        client = m_clients.at(i);
+        while (client->canReadLine()) {
+            int length = client->readLine(buf, sizeof buf);
             if (length > 0) {
-                (*client)->write(buf); // just echo it back for now. 
+                client->write(buf); // just echo it back.
                 QString cmd =  QString(buf) ;
                 if (cmd.startsWith("quit", Qt::CaseInsensitive)) {
                     emit quit();
