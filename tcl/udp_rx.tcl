@@ -1,12 +1,12 @@
 #! /usr/bin/tclsh 
 
 package require udp
-set port {9}
+set port {1735}
 
 proc logPacket {host_info msg} {
    set timestamp [clock format [clock seconds] -format {%d.%m.%Y %H:%M:%S}]
    set f [open "ReceivedUdpMessage.log" a]
-   puts  "$timestamp $host_info $msg"
+   puts  "$host_info    $msg"
    puts $f "$timestamp $host_info $msg"
    close $f
 }

@@ -74,8 +74,8 @@ int main(int argc, char* argv[])
       }
 
       // say ok.
-      snprintf(buffer, bufsize, "Ok.");
-      sendto(sock, buffer, bufsize, 0, (struct sockaddr*)&clientaddr, clientaddrlen);
+      int len = snprintf(buffer, bufsize, "Ok.");
+      sendto(sock, buffer, len, 0, (struct sockaddr*)&clientaddr, clientaddrlen);
    }
 
 EXIT:
