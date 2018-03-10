@@ -4,16 +4,17 @@
 
 QT -= gui
 QT += network
+QT += xml
 
 TEMPLATE = app
 CONFIG += qt
-TARGET = 
+TARGET = echo
 DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += server.h
-SOURCES += main.cpp server.cpp
+HEADERS += server.h XmlHandler.h
+SOURCES += main.cpp server.cpp XmlHandler.cpp
 
 
 
