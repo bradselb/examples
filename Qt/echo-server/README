@@ -1,6 +1,6 @@
-This is a simple Qt core application. It has no GUI and uses only the Qt Core
-Qt Network libraries. The TCP/IP server simply echos back whatever is said to 
-it. The project presents a simple demonstration of how to implement a TCP/IP
+This is a simple Qt core application. It has no GUI and uses only the Qt Core, 
+and Qt Network libraries. The application implements a simple TCP/IP echo 
+server. Once started, the server simply echos back whatever is said it. 
+The project presents a simple demonstration of how to implement a TCP/IP
 server and how to create a simple Qt Core application. 
-
 

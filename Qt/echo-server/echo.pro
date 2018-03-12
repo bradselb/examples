@@ -4,7 +4,6 @@
 
 QT -= gui
 QT += network
-QT += xml
 
 TEMPLATE = app
 CONFIG += qt
@@ -13,8 +12,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += server.h XmlHandler.h
-SOURCES += main.cpp server.cpp XmlHandler.cpp
-
+HEADERS += server.h 
+SOURCES += main.cpp server.cpp
 
 

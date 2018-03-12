@@ -30,7 +30,7 @@ class TestClient:
 		return response
 
 if __name__ == '__main__' :
-    myClient = TestClient('saturn')
+    myClient = TestClient('localhost')
     for cmd in ('uname -nrv', 'ls -l /etc', 'who', 'ping -c 5 tanagra'):
         s = myClient.sendCommandLine("%s\n" % (cmd))
         print s
