@@ -19,7 +19,6 @@ class TestClient:
 
 		# TODO: barf if fed garbage.
 
-
 		sock = socket.create_connection(self.target_addr, timeout=10)
 
 		sock.sendall(cmdline)
@@ -31,7 +30,7 @@ class TestClient:
 
 if __name__ == '__main__' :
     myClient = TestClient('localhost')
-    for cmd in ('uname -nrv', 'ls -l /etc', 'who', 'ping -c 5 tanagra'):
+    for cmd in ('uname -nrv', 'ls -l', 'who', 'cal'):
         s = myClient.sendCommandLine("%s\n" % (cmd))
         print s
 
