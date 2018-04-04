@@ -4,6 +4,8 @@
 #include <QHostAddress>
 #include <QTcpSocket>
 #include <QList>
+#include <QString>
+#include <QStringList>
 #include <QDebug>
 
 #include <stdlib.h>
@@ -59,18 +61,39 @@ void Server::onReadyRead()
                 QString cmd =  QString(buf) ;
                 cmd.remove("\n");
     qDebug() << "\t" << cmd << "from:" << client->peerAddress().toString() << client->peerPort();
+                // handle built-in / special commands first.
                 if (cmd.startsWith("quit", Qt::CaseInsensitive)) {
                     emit quit();
+
                 } else if (cmd.startsWith("bye", Qt::CaseInsensitive)) {
                     client->disconnectFromHost();
+
+                } else if (cmd.startsWith("readFile", Qt::CaseInsensitive)) {
+                    // determine the file to read. 
+                    // Assume file path is given after command and a spece
+                    // this is not very robust. How are extra spaces handled? 
+                    // of course, spaces in the file name or directory are abomination! 
+                    const char* path = cmd.split(QString(" "),QString::SkipEmptyParts).at(1).toStdString().c_str();
+                    qDebug() << "reading file from" << path;
+                    FILE* f = fopen(path, "r");
+                    if (f != 0) {
+                        memset(buf, 0, sizeof buf);
+                        while (0 != fgets(buf, sizeof buf, f)) {
+                            client->write(buf); 
+                            memset(buf, 0, sizeof buf);
+                        }
+                        fclose(f);
+                    }
+
                 } else {
+                    // not a built in command.....
                     FILE* f = popen(buf, "r");  // throw the command out to the shell and...
                     memset(buf, 0, sizeof buf); // read back whatever the command writes to stdout
                     while (0 != fgets(buf, sizeof buf, f)) {
-                        client->write(buf); 
+                        client->write(buf); // pass whatever the cmd wrote to stdout back to the client. 
                     }
                     pclose(f);
-                    //client->write("\nok >");
+                    //client->write("\nok >"); // send a prompt back to the client. 
                 }
             }
         }
