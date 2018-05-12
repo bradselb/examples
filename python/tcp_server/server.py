@@ -1,0 +1,54 @@
+import os
+import sys
+import time
+import shlex
+import subprocess
+
+from socket import *
+# a simple TCP/IP server that terminates when it receives 'quit'
+
+def runServer(ip_addr='', port=7000):
+        addr = (ip_addr, port)
+
+        sock = socket(AF_INET, SOCK_STREAM)
+
+        try:
+            sock.bind(addr)
+        except Exception as ex:
+            print("wait for a bit and try again")
+            return
+
+        sock.listen(5)
+
+        quit = False
+        while not quit:
+            client_sock, client_addr = sock.accept()
+            cmd = client_sock.recv(4096)
+
+            if cmd.strip().lower()[:4] == 'quit':
+                quit = True
+                out = 'quit\n'
+            else:
+                args = shlex.split(cmd)
+                print('args: %r' % (args))
+                try:
+                    child_proc = subprocess.Popen(args, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    out, err = child_proc.communicate()
+                except :
+                    out = 'Command not found.\n'
+
+
+            response = out.strip()
+            client_sock.sendall(response)
+            client_sock.shutdown(2)
+            client_sock.close()
+
+        sock.shutdown(2)
+        time.sleep(1)
+        sock.close()
+        time.sleep(1)
+
+
+if __name__ == '__main__':
+    runServer()
+
