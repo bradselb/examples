@@ -40,13 +40,11 @@ def runServer(ip_addr='', port=7000):
 
             response = out.strip()
             client_sock.sendall(response)
-            client_sock.shutdown(2)
+            client_sock.shutdown(SHUT_RDWR)
             client_sock.close()
 
-        sock.shutdown(2)
-        time.sleep(1)
+        #sock.shutdown(SHUT_RDWR)
         sock.close()
-        time.sleep(1)
 
 
 if __name__ == '__main__':
