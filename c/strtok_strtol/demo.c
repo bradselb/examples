@@ -7,9 +7,11 @@
 #include <stdlib.h> // malloc() and free()
 
 // idea:
-// read lines from a file stream
-// interpret each line as a delimited list of integers
-// possibly polluted by meaningless syntactic sugar or gibberish text
+// read lines from a file stream and interpret each line as a comma delimited
+// list of integers possibly polluted by meaningless syntactic sugar or comments.
+// There is relatively little syntax here. Sequences (or sets) of integers
+// are delimited by the newline character (fgets) and elements of the set 
+// (or sequence) are nominally delimited by comma, semi-colon or whitespace.
 
 int main(int argc, char* argv[])
 {
