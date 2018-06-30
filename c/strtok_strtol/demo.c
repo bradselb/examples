@@ -13,6 +13,11 @@
 // are delimited by the newline character (fgets) and elements of the set 
 // (or sequence) are nominally delimited by comma, semi-colon or whitespace.
 
+
+int extractSequencefromString(char* str, int* seqence, int max_len);
+
+
+
 int main(int argc, char* argv[])
 {
     FILE* input_stream = 0;
@@ -28,26 +33,8 @@ int main(int argc, char* argv[])
     memset(buf, 0, bufsize);
 
     while (0 != fgets(buf, bufsize, input_stream)) {
-        const char* delims = "{([ ])},;\t\n";
-        char* p;
-        char* token;
-        int len = 0;
-        printf("buf is: %s", buf);
-
-        p = buf;
-        while (0 != (token = strtok(p, delims))) {
-            p = 0;
-
-            char* endp;
-            long int k = strtol(token, &endp, 0);
-            int isValid = (0 != k || (0 == k && '0' == *token));
-            char ch = 'F';
-            if (isValid) {
-                ++len;
-                ch = 'T';
-            }
-            printf("k = %3ld, isValid: %c, endp is: '%s'\n", k, ch, endp);
-        }
+        printf("input string is: %s", buf);
+        int len = extractSequencefromString(buf, 0, 0);
         printf("sequence length: %d\n\n", len);
         memset(buf, 0, bufsize);
     }
@@ -59,3 +46,32 @@ EXIT:
 
     return 0;
 }
+
+
+
+int extractSequencefromString(char* str, int* seqence, int max_len)
+{
+    int len = 0;
+    const char* delims = "{([ ])},;\t\n";
+    char* token;
+    char* p = str;
+
+    while (0 != (token = strtok(p, delims))) {
+        p = 0; // this is how strtok() works. 
+
+        char* endp;
+        long int k = strtol(token, &endp, 0);
+        int isValid = (0 != k || (0 == k && '0' == *token));
+        char ch = 'F';
+        if (isValid) {
+            ++len;
+            ch = 'T';
+        }
+        printf("k = %3ld, isValid: %c, endp is: '%s'\n", k, ch, endp);
+    }
+
+    return len;
+}
+
+
+
