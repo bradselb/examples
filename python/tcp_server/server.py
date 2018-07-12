@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import os
 import sys
 import time
@@ -18,19 +20,23 @@ def runServer(ip_addr='', port=7000):
             print("wait for a bit and try again")
             return
 
+        print("listening on port %d" % (port))
         sock.listen(5)
 
         quit = False
         while not quit:
             client_sock, client_addr = sock.accept()
+            print("accepted connection from %s:%d" % (client_addr[0], client_addr[1]))
+
             cmd = client_sock.recv(4096)
+            print("%s" % (cmd.strip(' \n\r')))
 
             if cmd.strip().lower()[:4] == 'quit':
                 quit = True
                 out = 'quit\n'
             else:
                 args = shlex.split(cmd)
-                print('args: %r' % (args))
+                #print('args: %r' % (args))
                 try:
                     child_proc = subprocess.Popen(args, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
                     out, err = child_proc.communicate()
