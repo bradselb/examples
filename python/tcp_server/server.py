@@ -49,7 +49,10 @@ def runServer(ip_addr='', port=7000):
             client_sock.shutdown(SHUT_RDWR)
             client_sock.close()
 
-        #sock.shutdown(SHUT_RDWR)
+        try:
+            sock.shutdown(SHUT_RDWR)
+        except:
+            pass
         sock.close()
 
 
