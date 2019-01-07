@@ -1,0 +1,26 @@
+This is a quick and very messy hacked-to-life example of how to use the 
+serial port with QT. I just sat down one Sunday afternoon and kinda shit 
+this out while reading the QT docs on the QSerialPort class. 
+
+I needed something that would spew on the serial port so for this example, 
+I connected and Adafruit Ultimate GPS module to my computer with a USB-Serial 
+cable (also available from Adafruit). 
+
+Note that the QSerialPort class is not included by default in Debian's QT dev
+support. I had to...
+   sudo apt-get install libqt5serialport5 libqt5serialport5-dev
+
+note also that ordinary users do not have privs with the serial ports so...
+   sudo adduser brad dialout
+
+
+Here are a few ideas for where this will be further developed...
+   -- GPS Clock with Qt UI
+   -- Simple GPS receiver thingy with Qt GUI.
+   -- Luxury GPS data logger
+   -- APRS ??? hmmm.... ???
+
+references:
+Adafruit Ultimate GPS Breakout module, https://www.adafruit.com/product/746
+Adafruit USB to TTL serial Cable, https://www.adafruit.com/product/954
+
