@@ -2,7 +2,7 @@
 import subprocess 
 
 for i in range(1, 255):
-	ipaddr = "192.168.100.%s" % (i)
+	ipaddr = "192.168.117.%s" % (i)
 	l = ["ping", "-q", "-c 3", ipaddr]
 	rc = subprocess.call(l)
 	if (rc == 0):

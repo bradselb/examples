@@ -23,19 +23,26 @@ int main(int argc, char* argv[])
     FILE* input_stream = 0;
     char* buf = 0;
     int bufsize = 4096;
+    int sequence[32];
+    const int max_seq_length = sizeof sequence / sizeof sequence[0];
 
     buf = malloc(bufsize);
     if (!buf) goto EXIT;
+    memset(buf, 0, bufsize);
 
     input_stream = fopen(argv[1], "r");
     if (!input_stream) goto EXIT;
 
-    memset(buf, 0, bufsize);
-
     while (0 != fgets(buf, bufsize, input_stream)) {
         printf("input string is: %s", buf);
-        int len = extractSequencefromString(buf, 0, 0);
-        printf("sequence length: %d\n\n", len);
+        int len = extractSequencefromString(buf, &sequence[0], max_seq_length);
+        if (len > 0) {
+            printf("[ ");
+            for (int i=0; i<len; ++i) {
+                printf("%d ", sequence[i]);
+            }
+            printf("]\n");
+        }
         memset(buf, 0, bufsize);
     }
 
@@ -49,7 +56,7 @@ EXIT:
 
 
 
-int extractSequencefromString(char* str, int* seqence, int max_len)
+int extractSequencefromString(char* str, int* sequence, int max_len)
 {
     int len = 0;
     const char* delims = "{([ ])},;\t\n";
@@ -61,13 +68,12 @@ int extractSequencefromString(char* str, int* seqence, int max_len)
 
         char* endp;
         long int k = strtol(token, &endp, 0);
-        int isValid = (0 != k || (0 == k && '0' == *token));
-        char ch = 'F';
-        if (isValid) {
+        int isValid = ((0 != k) || (0 == k && '0' == *token));
+        if (isValid && 0 != sequence && len < max_len) {
+            sequence[len] = k;
             ++len;
-            ch = 'T';
         }
-        printf("k = %3ld, isValid: %c, endp is: '%s'\n", k, ch, endp);
+        //printf("k = %3ld, isValid: %d, endp is: '%s'\n", k, isValid, endp);
     }
 
     return len;
