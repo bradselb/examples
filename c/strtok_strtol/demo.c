@@ -1,9 +1,8 @@
-// try this...
-//   gcc -o demo demo.c
-//   ./demo sequences
 
+#include "extractSequence.h"
+
+#include <string.h> // memset(), strncpy(), strlen()
 #include <stdio.h> // printf(), fgets(), fopen(), fclose()
-#include <string.h> // strtok(), strtol()
 #include <stdlib.h> // malloc() and free()
 
 // idea:
@@ -14,28 +13,37 @@
 // (or sequence) are nominally delimited by comma, semi-colon or whitespace.
 
 
-int extractSequencefromString(char* str, int* seqence, int max_len);
-
-
 
 int main(int argc, char* argv[])
 {
     FILE* input_stream = 0;
-    char* buf = 0;
+
+    char* inbuf = 0;
+    char* scratch_buf = 0;
     int bufsize = 4096;
-    int sequence[32];
+    
+    int sequence[64];
     const int max_seq_length = sizeof sequence / sizeof sequence[0];
 
-    buf = malloc(bufsize);
-    if (!buf) goto EXIT;
-    memset(buf, 0, bufsize);
+    inbuf = malloc(bufsize);
+    if (!inbuf) goto EXIT;
+
+    scratch_buf = malloc(bufsize);
+    if (!scratch_buf) goto EXIT;
 
     input_stream = fopen(argv[1], "r");
     if (!input_stream) goto EXIT;
 
-    while (0 != fgets(buf, bufsize, input_stream)) {
-        printf("input string is: %s", buf);
-        int len = extractSequencefromString(buf, &sequence[0], max_seq_length);
+    // read lines from the input file until the end of file.
+    memset(inbuf, 0, bufsize);
+    while (0 != fgets(inbuf, bufsize, input_stream)) {
+        printf("input string is: %s", inbuf);
+
+        // copy the input to the scratch buffer.
+        memset(scratch_buf, 0, bufsize);
+        strncpy(scratch_buf, inbuf, strlen(inbuf));
+
+        int len = extractSequencefromString(inbuf, &sequence[0], max_seq_length);
         if (len > 0) {
             printf("[ ");
             for (int i=0; i<len; ++i) {
@@ -43,41 +51,15 @@ int main(int argc, char* argv[])
             }
             printf("]\n");
         }
-        memset(buf, 0, bufsize);
+        memset(inbuf, 0, bufsize);
     }
 
 
 EXIT:
     if (input_stream) fclose(input_stream);
-    if (buf) free(buf);
+    if (scratch_buf) free(scratch_buf);
+    if (inbuf) free(inbuf);
 
     return 0;
 }
-
-
-
-int extractSequencefromString(char* str, int* sequence, int max_len)
-{
-    int len = 0;
-    const char* delims = "{([ ])},;\t\n";
-    char* token;
-    char* p = str;
-
-    while (0 != (token = strtok(p, delims))) {
-        p = 0; // this is how strtok() works. 
-
-        char* endp;
-        long int k = strtol(token, &endp, 0);
-        int isValid = ((0 != k) || (0 == k && '0' == *token));
-        if (isValid && 0 != sequence && len < max_len) {
-            sequence[len] = k;
-            ++len;
-        }
-        //printf("k = %3ld, isValid: %d, endp is: '%s'\n", k, isValid, endp);
-    }
-
-    return len;
-}
-
-
 
