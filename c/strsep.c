@@ -1,5 +1,5 @@
 /* 
-  gcc -o strsep -Wall -O2 -std=c89 -D_BSD_SOURCE=1 strsep.c
+  gcc -o strsep -Wall -O2 strsep.c
 
   ./strsep '$GLGSV,3,1,11,74,42,053,,66,16,296,,82,,,,73,03,019,*5B'
 */
