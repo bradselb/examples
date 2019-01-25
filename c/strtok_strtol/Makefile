@@ -16,6 +16,6 @@ $(EXE) : $(OBJECTS)
 clean :
 	@rm -f $(OBJECTS) $(EXE)
 
-run :
+run : $(EXE)
 	./$(EXE) sequences
 
