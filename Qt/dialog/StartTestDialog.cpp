@@ -1,7 +1,12 @@
-
 #include "StartTestDialog.h"
-#include <QtGui> // this includes *EVERYTHING*
 
+#include <QtGui>
+#include <QLabel>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QGroupBox>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 StartTestDialog::StartTestDialog()
 {
