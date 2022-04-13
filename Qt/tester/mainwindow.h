@@ -18,6 +18,7 @@ public:
 private slots:
     void open();
     void save();
+    void saveAs();
     void about();
 
 private: // member functions

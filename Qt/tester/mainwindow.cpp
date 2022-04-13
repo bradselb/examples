@@ -1,4 +1,13 @@
 #include <QtGui>
+#include <QWidget>
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QStatusBar>
+
+
 
 #include "mainwindow.h"
 #include "centralwidget.h"
@@ -25,6 +34,12 @@ void MainWindow::open()
 
 
 void MainWindow::save()
+{
+    return;
+}
+
+
+void MainWindow::saveAs()
 {
     return;
 }

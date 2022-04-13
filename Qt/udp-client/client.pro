@@ -6,7 +6,7 @@ QT -= gui
 QT += network
 
 TEMPLATE = app
-TARGET = 
+TARGET = udpclient
 DEPENDPATH += .
 INCLUDEPATH += .
 

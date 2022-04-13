@@ -1,6 +1,11 @@
 
 #include "centralwidget.h"
 #include <QtGui>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QFormLayout>
 
 CentralWidget::CentralWidget()
 {
