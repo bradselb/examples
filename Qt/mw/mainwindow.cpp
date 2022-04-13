@@ -1,4 +1,12 @@
 #include <QtGui>
+#include <QAction>
+#include <QMenu>
+#include <QPlainTextEdit>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QStatusBar>
 
 #include <mainwindow.h>
 
@@ -240,13 +248,7 @@ void MainWindow::loadFile(QString const& fileName)
     } else {
 
         QTextStream in(&file);
-#ifndef QT_NO_CURSOR
-        QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
         textEdit->setPlainText(in.readAll());
-#ifndef QT_NO_CURSOR
-        QApplication::restoreOverrideCursor();
-#endif
 
         setCurrentFile(fileName);
         statusBar()->showMessage(tr("File loaded"), 2000);
@@ -267,13 +269,7 @@ bool MainWindow::saveFile(QString const& fileName)
     } else {
 
         QTextStream out(&file);
-#ifndef QT_NO_CURSOR
-        QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
         out << textEdit->toPlainText();
-#ifndef QT_NO_CURSOR
-        QApplication::restoreOverrideCursor();
-#endif
 
         setCurrentFile(fileName);
         statusBar()->showMessage(tr("File saved"), 2000);
