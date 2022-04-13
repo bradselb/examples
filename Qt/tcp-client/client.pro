@@ -6,7 +6,7 @@ QT -= gui
 QT += network
 
 TEMPLATE = app
-TARGET = 
+TARGET = client
 DEPENDPATH += .
 INCLUDEPATH += .
 
