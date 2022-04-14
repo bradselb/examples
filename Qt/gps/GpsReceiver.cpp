@@ -1,22 +1,17 @@
 #include "GpsReceiver.h"
+#include "checksum.h"
 
 #include <QObject>
-#include <QSerialPort>
 #include <QIODevice>
 
 #include <QDebug>
 
 
-GpsReceiver::GpsReceiver(QObject* parent) : QObject(parent),m_port(0)
+GpsReceiver::GpsReceiver(QObject* parent, QIODevice* port) : QObject(parent),m_port(port)
 {
-    m_port = new QSerialPort("/dev/ttyUSB0");
-    m_port->setBaudRate(QSerialPort::Baud9600);
-    m_port->setDataBits(QSerialPort::Data8);
-    m_port->setParity(QSerialPort::NoParity);
-    m_port->setStopBits(QSerialPort::OneStop);
     bool isSuccess = m_port->open(QIODevice::ReadOnly);
     if (!isSuccess) {
-        qDebug() << "port open() error code: " << m_port->error();
+        qDebug() << "port open() error code: " << m_port->errorString();
     }
 
     connect(m_port, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
@@ -47,24 +42,26 @@ void GpsReceiver::onReadyRead()
             }
 
             //qDebug() << buf;
+            if (!verify_checksum(buf)) {
+                qDebug() << "recieved a line of garbage.";
+            } else {
+
+                QString s(buf);  // this function should emit a signal containing string, s and be done. 
 
 
-            // factor this stuff out to its own function.
-            QString s(buf);
-            //s = s.remove('\r').remove('\n');
-            QStringList parts = s.split('*');
-            QString message = parts[0];
-            QString checksum = parts[1];
-            // verify checksum
-            QStringList tokens = message.split(',');
 
-            qDebug() << tokens;
+                QStringList parts = s.split('*');
+                QString message = parts[0].remove('$');
+                QString checksum = parts[1];
 
+                qDebug() << message << checksum;
 
-            if (tokens[0] == QString("$GPGGA")) {
-                ++gga_count;
+                QStringList tokens = message.split(',');
+
+                if (tokens[0] == QString("GPGGA")) {
+                    ++gga_count;
+                }
             }
-
 
 
         } else {
@@ -75,5 +72,3 @@ void GpsReceiver::onReadyRead()
         emit quit();
     }
 }
-
-

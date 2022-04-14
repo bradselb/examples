@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class QSerialPort;
+class QIODevice;
 
 class GpsReceiver : public QObject
 {
@@ -11,7 +11,7 @@ class GpsReceiver : public QObject
     Q_OBJECT
 
     public:
-        GpsReceiver(QObject* parent=0);
+        GpsReceiver(QObject* parent, QIODevice* port);
         ~GpsReceiver();
 
     signals:
@@ -26,7 +26,7 @@ class GpsReceiver : public QObject
         GpsReceiver& operator=(GpsReceiver const&);
 
     private:
-        QSerialPort* m_port;
+        QIODevice* m_port;
 
 };
 
