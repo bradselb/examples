@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
         s.replace(QString("$PROJECT_PATH"), QString("~/mysample"));
         s.replace(QString("$PYTHON_VERSION"), QString("27"));
 
-        printf("%s\n", s.toAscii().data());
+        printf("%s\n", s.toStdString().c_str());
     }
     return 0;
 }
