@@ -15,13 +15,28 @@ class GpsReceiver : public QObject
         ~GpsReceiver();
 
     signals:
-        void quit();
+        void messageReceived(QString const&);
+        void updateAltitude(double);
+        void updateLatitude(double);
+        void updateLongitude(double);
+        void updateHeading(double);
+        void updateTime(QTime const&);
+        void updateDate(QDate const&);
+        void updateDateTime(QDateTime const&);
+        void updateSatellitesUsed(int);
+        void updateGlonasInView(int);
+        void updateGpsSatInView(int);
+        void updateFixQuality(int);
+        void updateFixValid(QString const&);
+        void updateFixMode(QString const&);
+        void updateHDOP(int);
+
 
     public slots:
         void onReadyRead();
 
 
-    private: // not impleented
+    private: // not implented
         GpsReceiver(GpsReceiver const&);
         GpsReceiver& operator=(GpsReceiver const&);
 
