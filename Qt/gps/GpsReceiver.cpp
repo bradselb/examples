@@ -13,6 +13,10 @@
 #include <QDebug>
 
 int verify_checksum(QByteArray);
+int decodeUTC(QString const& token, int* hours, int* minutes, int* seconds);
+int decodeLatLon(QString const& magnitude, QString const& direction, double* degrees);
+
+
 
 GpsReceiver::GpsReceiver(QObject* parent, QIODevice* port) : QObject(parent),m_port(port)
 {
@@ -69,43 +73,37 @@ void GpsReceiver::onReadyRead()
                 if (tokens[0].mid(2,3) == QString("GGA")) {
                     // first token is UTC hhmmss.sss
                     int hours, minutes, seconds;
-                    hours = tokens[1].mid(0,2).toInt();
-                    minutes =  tokens[1].mid(2,2).toInt();
-                    seconds = tokens[1].mid(4,2).toInt();
+                    decodeUTC(tokens[1], &hours, &minutes, &seconds);
                     QTime time(hours, minutes, seconds, 0);
                     //emit updateTime(time);
 
                     // second token is latitude. ddmm.mmmm
                     // third token is 'N' or 'S'
-                    double degrees = tokens[2].mid(0,2).toInt();
-                    degrees += (tokens[2].mid(2,7).toDouble()) / 60.0;
-                    double latitude = (tokens[3]=="S" ? -1.0 : 1.0) * degrees;
-                    emit updateLatitude(latitude);
+                    double degrees;
+                    int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
+                    if (!ec) emit updateLatitude(degrees);
 
                     // fourth token is longitude. dddmm.mmmm
                     // fifth token is 'E' or 'W'
-                    degrees = tokens[4].mid(0,3).toInt();
-                    degrees += (tokens[4].mid(3,7).toDouble()) / 60.0;
-                    double longitude = (tokens[5]=="W" ? -1.0 : 1.0) * degrees;
-                    emit updateLongitude(longitude);
+                    ec = decodeLatLon(tokens[4], tokens[5], &degrees);
+                    if (!ec) emit updateLongitude(degrees);
 
                     // sixth token indicates type of fix 0:fix not valid, 1:GPS fix, 2:DGPS fix
-                    int fix = tokens[6].toInt();
-                    emit updateFixQuality(fix);
+                    emit updateFixQuality(tokens[6].toInt());
 
                     // seventh token is, number of satelites used to calculate the fix
-                    int satsUsed = tokens[7].toInt();
-                    emit updateSatellitesUsed(satsUsed);
+                    emit updateSatellitesUsed(tokens[7].toInt());
 
                     // eighth token is horizontal dilution of precision, hdop
-                    double hdop = tokens[8].toDouble();
-                    emit updateHDOP(hdop);
+                    emit updateHDOP(tokens[8].toDouble());
 
-                    // nineth token is antenna height above mean sea level in meters.
-                    // and the eleventh token is the geoidal separation in meters. 
+                    // nineth token is antenna height above mean sea level, in meters.
                     //double antennaHeight = tokens[9].toDouble();
+                    // and the eleventh token is the geoidal separation in meters. 
                     //double geoidalSeparation = tokens[11].toDouble();
-                    //double altitude = antennaHeight + geoidalSeparation;
+                    //double height = antennaHeight + geoidalSeparation;
+                    // the above is the height, in meters, above the elipsoid surface?
+
                     emit updateAltitude(tokens[9].toDouble()); // above mean sea level in meters
 
                     //qDebug() << time.toString() 
@@ -116,36 +114,30 @@ void GpsReceiver::onReadyRead()
                 } else if (tokens[0].mid(2,3) == QString("RMC")) {
                     // first token is UTC hhmmss.sss
                     int hours, minutes, seconds;
-                    hours = tokens[1].mid(0,2).toInt();
-                    minutes =  tokens[1].mid(2,2).toInt();
-                    seconds = tokens[1].mid(4,2).toInt();
+                    decodeUTC(tokens[1], &hours, &minutes, &seconds);
                     QTime time(hours, minutes, seconds, 0);
                     emit updateTime(time);
 
-                    // second token is a single letter. A-->valid fix, V-->not valid fix
-                    emit updateFixValid(tokens[2]);
+                    // second token is a single letter indicating fix status, A-->valid fix, V-->not valid fix
+                    emit updateFixStatus(tokens[2]);
 
                     // third token is latitude. ddmm.mmmm
                     // fourth token is 'N' or 'S'
-                    double degrees = tokens[3].mid(0,2).toInt();
-                    degrees += (tokens[3].mid(2,7).toDouble()) / 60.0;
-                    double latitude = (tokens[4]=="S" ? -1.0 : 1.0) * degrees;
-                    emit updateLatitude(latitude);
+                    double degrees;
+                    int ec = decodeLatLon(tokens[3], tokens[4], &degrees);
+                    if (!ec) emit updateLatitude(degrees);
 
                     // fifth token is longitude. dddmm.mmmm
                     // sixth token is 'E' or 'W'
-                    degrees = tokens[5].mid(0,3).toInt();
-                    degrees += (tokens[5].mid(3,7).toDouble()) / 60.0;
-                    double longitude = (tokens[6]=="W" ? -1.0 : 1.0) * degrees;
-                    emit updateLongitude(longitude);
+                    ec = decodeLatLon(tokens[5], tokens[6], &degrees);
+                    if (!ec) emit updateLongitude(degrees);
 
-                    // seventh and eighth are two floating point numbers...
-                    // speed in knots and heading
-                    //double speed = tokens[7].toDouble();
-                    double heading = tokens[8].toDouble();
-                    emit updateHeading(heading);
+                    // I'm not sure these are reliable.
+                    //double speed = tokens[7].toDouble(); // knots?
+                    //double heading = tokens[8].toDouble();
+                    //emit updateHeading(tokens[8].toDouble());
 
-                    // ninth token is the date, ddmmyy
+                    // ninth token is the UTC date, ddmmyy
                     int day, month, year;
                     day = tokens[9].mid(0,2).toInt();
                     month = tokens[9].mid(2,2).toInt();
@@ -156,12 +148,11 @@ void GpsReceiver::onReadyRead()
                     // twelfth token is a single letter indicating mode {N,A,D}
                     emit updateFixMode(tokens[12]);
 
-                    //QDateTime datetime(date, time, QTimeZone(0)); // this is key to getting the correct time zone
-                    //qDebug() << datetime.toString(Qt::ISODate) << QString("lat, lon: %1, %2").arg(latitude, 0, 'f', 6).arg(longitude, 0, 'f', 6) << datetime.toLocalTime().toString("ddd, dd MMM yyyy hh:mm:ss a");
+                } else if (tokens[0].mid(2,3) == QString("VTG")) {
                 } else if (tokens[0] == QString("GPGSV")) {
-                    emit updateGpsSatInView(tokens[3].toInt());
+                    emit updateGpsSatsInView(tokens[3].toInt());
                 } else if (tokens[0] == QString("GLGSV")) {
-                    emit updateGlonasInView(tokens[3].toInt());
+                    emit updateGloSatsInView(tokens[3].toInt());
                 }
             }
         }
@@ -199,4 +190,39 @@ int verify_checksum(QByteArray receivedSentence)
     return isGood;
 }
 
+int decodeUTC(QString const& token, int* hours, int* minutes, int* seconds)
+{
+    int rc = 0;
 
+    if (0 != hours) *hours = token.mid(0,2).toInt();
+    if (0 != minutes) *minutes =  token.mid(2,2).toInt();
+    if (0 != seconds) *seconds = token.mid(4,2).toInt();
+
+    return rc;
+}
+
+// decode either latitude or longitude. 
+// latitide  is encoded, ddmm.mmmm 
+// longitude is encoded, dddmm.mmmm
+// strategy will be look for the decimal point and back up two characters.
+int decodeLatLon(QString const& magnitude, QString const& direction, double* degrees)
+{
+    int rc;
+    int idx;
+    double d;
+
+    // find the decimal point, expect it to be either 4 or 5
+    idx = magnitude.indexOf(QChar('.'));
+    if (idx == 4 || idx == 5) {
+        idx = idx - 2; // now the index of the start of 'mm.mmmm'
+        d = magnitude.left(idx).toDouble();
+        d += magnitude.mid(idx, 7).toDouble() / 60.0;
+        if (direction == "W" || direction == "S") {d = -1.0 * d;}
+        if (degrees) *degrees = d;
+        rc = 0;
+    } else {
+        rc = -1;
+    }
+
+    return rc;
+}

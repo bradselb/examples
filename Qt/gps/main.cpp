@@ -22,16 +22,15 @@ int main(int argc, char* argv[])
     QObject::connect(gps, SIGNAL(updateAltitude(double)), &basicdisplay, SLOT(setAltitude(double)));
     QObject::connect(gps, SIGNAL(updateLatitude(double)), &basicdisplay, SLOT(setLatitude(double)));
     QObject::connect(gps, SIGNAL(updateLongitude(double)), &basicdisplay, SLOT(setLongitude(double)));
-    QObject::connect(gps, SIGNAL(updateHeading(double)), &basicdisplay, SLOT(setHeading(double)));
     QObject::connect(gps, SIGNAL(updateDate(QDate const&)), &basicdisplay, SLOT(setDate(QDate const&)));
     QObject::connect(gps, SIGNAL(updateTime(QTime const&)), &basicdisplay, SLOT(setTime(QTime const&)));
     QObject::connect(gps, SIGNAL(updateDateTime(QDateTime const&)), &basicdisplay, SLOT(setDateTime(QDateTime const&)));
     QObject::connect(gps, SIGNAL(updateFixQuality(int)), &basicdisplay, SLOT(setFixQuality(int)));
-    QObject::connect(gps, SIGNAL(updateFixValid(QString const&)), &basicdisplay, SLOT(setFixValid(QString const&)));
+    QObject::connect(gps, SIGNAL(updateFixStatus(QString const&)), &basicdisplay, SLOT(setFixStatus(QString const&)));
     QObject::connect(gps, SIGNAL(updateFixMode(QString const&)), &basicdisplay, SLOT(setFixMode(QString const&)));
     QObject::connect(gps, SIGNAL(updateSatellitesUsed(int)), &basicdisplay, SLOT(setSatsInUse(int)));
-    QObject::connect(gps, SIGNAL(updateGlonasInView(int)), &basicdisplay, SLOT(setGlonasInView(int)));
-    QObject::connect(gps, SIGNAL(updateGpsSatInView(int)), &basicdisplay, SLOT(setGpsSatInView(int)));
+    QObject::connect(gps, SIGNAL(updateGloSatsInView(int)), &basicdisplay, SLOT(setGloSatsInView(int)));
+    QObject::connect(gps, SIGNAL(updateGpsSatsInView(int)), &basicdisplay, SLOT(setGpsSatsInView(int)));
 
     return app.exec();
 }

@@ -23,13 +23,12 @@ class BasicDisplay : public QWidget
         void setLatitude(double);
         void setLongitude(double);
         void setAltitude(double);
-        void setHeading(double);
         void setFixQuality(int);
-        void setFixValid(QString const&);
+        void setFixStatus(QString const&);
         void setFixMode(QString const&);
         void setSatsInUse(int);
-        void setGlonasInView(int);
-        void setGpsSatInView(int);
+        void setGloSatsInView(int);
+        void setGpsSatsInView(int);
 
     private: // functions
 
@@ -40,7 +39,6 @@ class BasicDisplay : public QWidget
     double m_latitude;
     double m_longitude;
     double m_altitude;
-    double m_heading;
     int m_glinview;
     int m_gpinview;
     int m_fixquality;

@@ -11,7 +11,7 @@ BasicDisplay::BasicDisplay(QWidget* parent)
   : QWidget(parent)
   , m_elapsedtime(), m_datetime(0)
   , m_latitude(0.0), m_longitude(0.0)
-  , m_altitude(0.0), m_heading(0.0)
+  , m_altitude(0.0)
   , m_glinview(0), m_gpinview(0)
   , m_fixquality(0)
 {
@@ -54,31 +54,19 @@ void BasicDisplay::setDateTime(QDateTime const& dt)
 void BasicDisplay::setLatitude(double lat)
 {
     m_latitude = lat;
-    m_ui->latitude->setText(QString("%1").arg(m_latitude, 0, 'f', -1));
+    m_ui->latitude->setText(QString("%1").arg(m_latitude, 0, 'f', -6));
 }
 
 void BasicDisplay::setLongitude(double lon)
 {
     m_longitude = lon;
-    m_ui->longitude->setText(QString("%1").arg(m_longitude, 0, 'f', -1));
+    m_ui->longitude->setText(QString("%1").arg(m_longitude, 0, 'f', -6));
 }
 
 void BasicDisplay::setAltitude(double alt)
 {
     m_altitude = alt;
-    if (m_fixquality > 1) 
-        m_ui->altitude->setText(QString("%1").arg(m_altitude));
-    else
-        m_ui->altitude->setText(QString("----"));
-}
-
-void BasicDisplay::setHeading(double heading)
-{
-    m_heading = heading;
-    if (m_fixquality > 1) 
-        m_ui->heading->setText(QString("%1").arg(m_heading));
-    else
-        m_ui->heading->setText(QString("----"));
+    m_ui->altitude->setText(QString("%1").arg(m_altitude, 0, 'g', -1));
 }
 
 void BasicDisplay::setFixQuality(int k)
@@ -96,9 +84,9 @@ void BasicDisplay::setFixQuality(int k)
     m_ui->fixquality->setText(QString("%1").arg(m_fixquality));
 }
 
-void BasicDisplay::setFixValid(QString const& fixvalid)
+void BasicDisplay::setFixStatus(QString const& status)
 {
-    m_ui->fixvalid->setText(fixvalid);
+    m_ui->fixstatus->setText(status);
 }
 
 void BasicDisplay::setFixMode(QString const& s)
@@ -111,14 +99,15 @@ void BasicDisplay::setSatsInUse(int n)
     m_ui->inuse->setText(QString("%1").arg(n));
 }
 
-void BasicDisplay::setGlonasInView(int n)
+void BasicDisplay::setGloSatsInView(int n)
 {
     m_glinview = n;
     m_ui->inview->setText(QString("%1").arg(m_gpinview + m_glinview));
 }
 
-void BasicDisplay::setGpsSatInView(int n)
+void BasicDisplay::setGpsSatsInView(int n)
 {
     m_gpinview = n;
     m_ui->inview->setText(QString("%1").arg(m_gpinview + m_glinview));
 }
+

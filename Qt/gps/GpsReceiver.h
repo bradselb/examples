@@ -24,10 +24,10 @@ class GpsReceiver : public QObject
         void updateDate(QDate const&);
         void updateDateTime(QDateTime const&);
         void updateSatellitesUsed(int);
-        void updateGlonasInView(int);
-        void updateGpsSatInView(int);
+        void updateGloSatsInView(int);
+        void updateGpsSatsInView(int);
         void updateFixQuality(int);
-        void updateFixValid(QString const&);
+        void updateFixStatus(QString const&);
         void updateFixMode(QString const&);
         void updateHDOP(int);
 

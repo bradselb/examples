@@ -35,9 +35,9 @@
   <widget class="QLabel" name="latitude">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>80</y>
-     <width>151</width>
+     <x>70</x>
+     <y>90</y>
+     <width>131</width>
      <height>31</height>
     </rect>
    </property>
@@ -51,9 +51,9 @@
   <widget class="QLabel" name="longitude">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>80</y>
-     <width>151</width>
+     <x>210</x>
+     <y>90</y>
+     <width>141</width>
      <height>31</height>
     </rect>
    </property>
@@ -67,7 +67,7 @@
   <widget class="QLabel" name="altitude">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>270</x>
      <y>130</y>
      <width>80</width>
      <height>31</height>
@@ -96,7 +96,7 @@
     </sizepolicy>
    </property>
    <property name="text">
-    <string/>
+    <string>Mon 18-Apr-2022  10:31:30 pm</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -105,8 +105,8 @@
   <widget class="QLabel" name="inuse">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>170</y>
+     <x>310</x>
+     <y>250</y>
      <width>30</width>
      <height>31</height>
     </rect>
@@ -121,7 +121,7 @@
   <widget class="QLabel" name="label_1">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>170</x>
      <y>130</y>
      <width>90</width>
      <height>31</height>
@@ -137,14 +137,14 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>170</y>
-     <width>80</width>
+     <x>260</x>
+     <y>250</y>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>in use</string>
+    <string>use</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -187,12 +187,12 @@
     <rect>
      <x>20</x>
      <y>250</y>
-     <width>161</width>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>time to first fix</string>
+    <string>ttff</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -201,7 +201,7 @@
   <widget class="QLabel" name="timetofirstfix">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>70</x>
      <y>250</y>
      <width>60</width>
      <height>31</height>
@@ -214,43 +214,11 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>170</y>
-     <width>90</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>heading</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="heading">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>170</y>
-     <width>60</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>123.4</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="inview">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>130</y>
+     <x>220</x>
+     <y>250</y>
      <width>30</width>
      <height>31</height>
     </rect>
@@ -265,14 +233,14 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>130</y>
-     <width>80</width>
+     <x>160</x>
+     <y>250</y>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>in view</string>
+    <string>view</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -294,7 +262,7 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="fixvalid">
+  <widget class="QLabel" name="fixstatus">
    <property name="geometry">
     <rect>
      <x>220</x>
