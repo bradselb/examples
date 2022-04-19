@@ -2,10 +2,10 @@
 #define BASICDISPLAY_H
 
 #include <QWidget>
-#include <QString>
+//#include <QString>
 #include <QTime>
 
-namespace Ui {class BasicDisplay; }
+namespace Ui {class BasicDisplay;}
 
 
 class BasicDisplay : public QWidget
@@ -15,9 +15,6 @@ class BasicDisplay : public QWidget
     public:
         BasicDisplay(QWidget* parent=0);
         virtual ~BasicDisplay();
-
-    signals:
-        void quit();
 
     public slots:
         void setTime(QTime const&);

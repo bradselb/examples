@@ -1,6 +1,7 @@
 #include "BasicDisplay.h"
 #include "ui_BasicDisplay.h"
 
+#include <QObject>
 #include <QDateTime>
 #include <QDate>
 #include <QTime>
@@ -87,9 +88,9 @@ void BasicDisplay::setFixQuality(int k)
         // not elapsed time is in milliseconds so, divide by 1000
         float t_seconds = m_elapsedtime.elapsed()/1000.0;
         if (t_seconds < 0.0)
-            m_ui->timetofirstfix->setText(QString("0.%1").arg(t_seconds, 0, 'f', -1));
+            m_ui->timetofirstfix->setText(QString("0.%1").arg(t_seconds));
         else
-            m_ui->timetofirstfix->setText(QString("%1").arg(t_seconds, 0, 'f', -1));
+            m_ui->timetofirstfix->setText(QString("%1").arg(t_seconds));
     }
     m_fixquality = k;
     m_ui->fixquality->setText(QString("%1").arg(m_fixquality));
