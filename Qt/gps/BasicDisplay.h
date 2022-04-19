@@ -2,8 +2,7 @@
 #define BASICDISPLAY_H
 
 #include <QWidget>
-//#include <QString>
-#include <QTime>
+#include <QElapsedTimer>
 
 namespace Ui {class BasicDisplay;}
 
@@ -34,7 +33,7 @@ class BasicDisplay : public QWidget
 
     private: // data
     Ui::BasicDisplay* m_ui;
-    QTime m_elapsedtime;
+    QElapsedTimer m_elapsedtime; // time to first fix
     QDateTime* m_datetime;
     double m_latitude;
     double m_longitude;

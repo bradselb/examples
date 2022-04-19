@@ -5,43 +5,32 @@
 
 class QIODevice;
 
+// ---------------------------------------------------------------------------
+// a class to represent the GNSS receiver
+// it reads lines from an IO device,
+// does some simple integrity checks and,
+// for those lines that look like valid NMEA0183 sentences,
+// it broadcasts the received NMEA 0183 sentence.
 class GpsReceiver : public QObject
 {
-
     Q_OBJECT
 
     public:
-        GpsReceiver(QObject* parent, QIODevice* port);
+        GpsReceiver(QIODevice* iodevice, QObject* parent=0);
         ~GpsReceiver();
 
     signals:
-        void messageReceived(QString const&);
-        void updateAltitude(double);
-        void updateLatitude(double);
-        void updateLongitude(double);
-        void updateHeading(double);
-        void updateTime(QTime const&);
-        void updateDate(QDate const&);
-        void updateDateTime(QDateTime const&);
-        void updateSatellitesUsed(int);
-        void updateGloSatsInView(int);
-        void updateGpsSatsInView(int);
-        void updateFixQuality(int);
-        void updateFixStatus(QString const&);
-        void updateFixMode(QString const&);
-        void updateHDOP(int);
+        void nmeaSentence(QString const&);
 
-
-    public slots:
+    private slots:
         void onReadyRead();
-
 
     private: // not implented
         GpsReceiver(GpsReceiver const&);
         GpsReceiver& operator=(GpsReceiver const&);
 
-    private:
-        QIODevice* m_port;
+    private: // data
+        QIODevice* m_iodevice;
 
 };
 
