@@ -6,8 +6,6 @@
 #include <QString>
 
 
-#include <QDebug>
-
 // ---------------------------------------------------------------------------
 int verify_checksum(QByteArray);
 
@@ -18,7 +16,8 @@ GpsReceiver::GpsReceiver(QIODevice* iodevice, QObject* parent) : QObject(parent)
 {
     bool isSuccess = m_iodevice->open(QIODevice::ReadOnly);
     if (!isSuccess) {
-        qDebug() << "iodevice open() error code: " << m_iodevice->errorString();
+        //qDebug() << "iodevice open() error code: " << m_iodevice->errorString();
+        throw(m_iodevice->errorString());
     }
 
     connect(m_iodevice, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
@@ -43,14 +42,14 @@ void GpsReceiver::onReadyRead()
     if (m_iodevice->canReadLine()) {
         length = m_iodevice->readLine(buf, sizeof buf);
         if (length<0) {
-            qDebug() << "iodevice read() failed. ";
+            //qDebug() << "iodevice read() failed. ";
         } else {
             QByteArray receivedLine(QByteArray(buf).trimmed());
 
             if (receivedLine[0] != '$' || !receivedLine.contains('*')) {
-                qDebug() << "recieved an incomplete line.";
+                //qDebug() << "recieved an incomplete line.";
             } else if (!verify_checksum(receivedLine)) {
-                qDebug() << "recieved a line of garbage.";
+                //qDebug() << "recieved a line of garbage.";
             } else {
 
                 emit nmeaSentence(QString(buf));

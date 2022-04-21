@@ -17,20 +17,20 @@ class MessageDecoder : public QObject
         ~MessageDecoder();
 
     signals:
-        void updateAltitude(double);
+        void updateDate(QDate const&);
+        void updateTime(QTime const&);
         void updateLatitude(double);
         void updateLongitude(double);
-        void updateHeading(double);
-        void updateTime(QTime const&);
-        void updateDate(QDate const&);
-        void updateDateTime(QDateTime const&);
-        void updateSatellitesUsed(int);
+        void updateAltitude(double);
+        void updateSatsInUse(int);
         void updateGloSatsInView(int);
         void updateGpsSatsInView(int);
         void updateFixQuality(int);
-        void updateFixStatus(QString const&);
-        void updateFixMode(QString const&);
+        void updateFixStatus(QChar const&);
+        void updateFixMode(QChar const&);
         void updateHDOP(int);
+        void updateDirectionOfTravel(double); // VTG
+        void updateSpeedOfTravelKmPerHr(double); // VTG
 
 
     public slots:

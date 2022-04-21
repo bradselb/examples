@@ -1,13 +1,10 @@
 #include "MessageDecoder.h"
 
 #include <QObject>
-//#include <QByteArray>
 #include <QString>
-
 #include <QTime>
 #include <QDate>
 
-#include <QDebug>
 
 // ---------------------------------------------------------------------------
 int decodeUTC(QString const& token, int* hours, int* minutes, int* seconds);
@@ -30,38 +27,42 @@ MessageDecoder::~MessageDecoder()
 // ---------------------------------------------------------------------------
 void MessageDecoder::decodeNmeaSentence(QString const& sentence)
 {
+    // throw away the checksum and the '$' and '*',
+    // keep only the message part
     QStringList parts = sentence.split('*');
     QString message = parts[0].remove('$');
-    QStringList tokens = message.split(','); //keep the empty fields
+
+    // split the message into a list of tokens. Keep the empty fields
+    QStringList tokens = message.split(',');
 
     if (tokens[0].mid(2,3) == QString("GGA")) {
-        // first token is UTC hhmmss.sss
-        int hours, minutes, seconds;
-        decodeUTC(tokens[1], &hours, &minutes, &seconds);
-        QTime time(hours, minutes, seconds, 0);
+        // first token is UTC, format is, hhmmss.sss
+        //int hours, minutes, seconds;
+        //decodeUTC(tokens[1], &hours, &minutes, &seconds);
+        //QTime time(hours, minutes, seconds, 0);
         //emit updateTime(time);
 
-        // second token is latitude. ddmm.mmmm
+        // second token is latitude. format is, ddmm.mmmm
         // third token is 'N' or 'S'
-        double degrees;
-        int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
-        if (!ec) emit updateLatitude(degrees);
+        //double degrees;
+        //int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
+        //if (!ec) emit updateLatitude(degrees);
 
         // fourth token is longitude. dddmm.mmmm
         // fifth token is 'E' or 'W'
-        ec = decodeLatLon(tokens[4], tokens[5], &degrees);
-        if (!ec) emit updateLongitude(degrees);
+        //ec = decodeLatLon(tokens[4], tokens[5], &degrees);
+        //if (!ec) emit updateLongitude(degrees);
 
         // sixth token indicates type of fix 0:fix not valid, 1:GPS fix, 2:DGPS fix
         emit updateFixQuality(tokens[6].toInt());
 
-        // seventh token is, number of satelites used to calculate the fix
-        emit updateSatellitesUsed(tokens[7].toInt());
+        // seventh token is, number of satellites used to calculate the fix
+        emit updateSatsInUse(tokens[7].toInt());
 
         // eighth token is horizontal dilution of precision, hdop
-        emit updateHDOP(tokens[8].toDouble());
+        //emit updateHDOP(tokens[8].toDouble());
 
-        // nineth token is antenna height above mean sea level, in meters.
+        // ninth token is antenna height above mean sea level, in meters.
         //double antennaHeight = tokens[9].toDouble();
         // eleventh token is the geoidal separation in meters.
         //double geoidalSeparation = tokens[11].toDouble();
@@ -76,10 +77,10 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
         int hours, minutes, seconds;
         decodeUTC(tokens[1], &hours, &minutes, &seconds);
         QTime time(hours, minutes, seconds, 0);
-        emit updateTime(time);
+        if (time.isValid() && !time.isNull()) emit updateTime(time);
 
         // second token is a single letter indicating fix status, A-->valid fix, V-->not valid fix
-        emit updateFixStatus(tokens[2]);
+        emit updateFixStatus(tokens[2].at(0));
 
         // third token is latitude, ddmm.mmmm and the fourth token is 'N' or 'S'
         double degrees;
@@ -90,26 +91,24 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
         ec = decodeLatLon(tokens[5], tokens[6], &degrees);
         if (!ec) emit updateLongitude(degrees);
 
-        // I'm not sure these are reliable.
-        //double speed = tokens[7].toDouble(); // knots?
-        //double heading = tokens[8].toDouble();
-        //emit updateHeading(tokens[8].toDouble());
-
         // ninth token is the UTC date, ddmmyy
         int day, month, year;
         day = tokens[9].mid(0,2).toInt();
         month = tokens[9].mid(2,2).toInt();
         year =  tokens[9].mid(4,2).toInt() + 2000;
         QDate date(year, month, day);
-        emit updateDate(date);
+        if (date.isValid() && !date.isNull()) emit updateDate(date);
 
         // twelfth token is a single letter indicating mode {N,A,D}
-        emit updateFixMode(tokens[12]);
+        emit updateFixMode(tokens[12].at(0));
 
     } else if (tokens[0].mid(2,3) == QString("VTG")) {
-        // todo...
+        emit updateDirectionOfTravel(tokens[1].toDouble());
+        emit updateSpeedOfTravelKmPerHr(tokens[7].toDouble());
+
     } else if (tokens[0] == QString("GPGSV")) {
         emit updateGpsSatsInView(tokens[3].toInt());
+
     } else if (tokens[0] == QString("GLGSV")) {
         emit updateGloSatsInView(tokens[3].toInt());
     }
