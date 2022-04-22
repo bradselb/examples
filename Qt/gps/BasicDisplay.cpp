@@ -28,9 +28,8 @@ BasicDisplay::BasicDisplay(QWidget* parent)
     m_datetime->setTimeZone(QTimeZone(0)); // GPS time is always UTC
     m_datetime->setDate(QDate(2000,0,0));
 
-    m_ui->inview->setText("");
-    m_ui->latitude->setText("");
-    m_ui->longitude->setText("");
+    m_ui->latitude->setText("-99.999999");
+    m_ui->longitude->setText("-999.999999");
 }
 
 // ---------------------------------------------------------------------------
@@ -113,6 +112,24 @@ void BasicDisplay::setFixMode(QChar const& mode)
         m_fixmode = mode.cell();
     }
     m_ui->fixmode->setText(mode);
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::setPdop(double pdop)
+{
+    m_ui->pdop->setText(QString("%1").arg(pdop, 0, 'f', 2));
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::setHdop(double hdop)
+{
+    m_ui->hdop->setText(QString("%1").arg(hdop, 0, 'f', 2));
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::setVdop(double vdop)
+{
+    m_ui->vdop->setText(QString("%1").arg(vdop, 0, 'f', 2));
 }
 
 // ---------------------------------------------------------------------------

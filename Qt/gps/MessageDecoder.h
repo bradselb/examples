@@ -17,18 +17,20 @@ class MessageDecoder : public QObject
         ~MessageDecoder();
 
     signals:
-        void updateDate(QDate const&);
-        void updateTime(QTime const&);
-        void updateLatitude(double);
-        void updateLongitude(double);
-        void updateAltitude(double);
-        void updateSatsInUse(int);
-        void updateGloSatsInView(int);
-        void updateGpsSatsInView(int);
-        void updateFixQuality(int);
-        void updateFixStatus(QChar const&);
-        void updateFixMode(QChar const&);
-        void updateHDOP(int);
+        void updateDate(QDate const&); // RMC
+        void updateTime(QTime const&); // RMC
+        void updateLatitude(double); // RMC
+        void updateLongitude(double); // RMC
+        void updateAltitude(double); // GGA
+        void updateSatsInUse(int); // GGA
+        void updateGloSatsInView(int); // GNGSV
+        void updateGpsSatsInView(int); // GPGSV
+        void updateFixQuality(int); // GGA
+        void updateFixStatus(QChar const&); // RMC
+        void updateFixMode(QChar const&); // RMC
+        void updatePdop(double); // GSA
+        void updateHdop(double); // GSA
+        void updateVdop(double); // GSA
         void updateDirectionOfTravel(double); // VTG
         void updateSpeedOfTravelKmPerHr(double); // VTG
 
@@ -36,6 +38,9 @@ class MessageDecoder : public QObject
     public slots:
         void decodeNmeaSentence(QString const&);
 
+    private: // functions
+        int decodeGGA(QStringList const& tokens);
+        int decodeRMC(QStringList const& tokens);
 
     private: // not implented
         MessageDecoder(MessageDecoder const&);

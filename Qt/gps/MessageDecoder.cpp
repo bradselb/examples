@@ -7,8 +7,10 @@
 
 
 // ---------------------------------------------------------------------------
-int decodeUTC(QString const& token, int* hours, int* minutes, int* seconds);
-int decodeLatLon(QString const& magnitude, QString const& direction, double* degrees);
+// local functions
+static int decodeUTC(QString const& token, int* hours, int* minutes, int* seconds);
+static int decodeLatLon(QString const& magnitude, QString const& direction, double* degrees);
+
 
 
 
@@ -36,71 +38,15 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
     QStringList tokens = message.split(',');
 
     if (tokens[0].mid(2,3) == QString("GGA")) {
-        // first token is UTC, format is, hhmmss.sss
-        //int hours, minutes, seconds;
-        //decodeUTC(tokens[1], &hours, &minutes, &seconds);
-        //QTime time(hours, minutes, seconds, 0);
-        //emit updateTime(time);
+        decodeGGA(tokens);
 
-        // second token is latitude. format is, ddmm.mmmm
-        // third token is 'N' or 'S'
-        //double degrees;
-        //int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
-        //if (!ec) emit updateLatitude(degrees);
-
-        // fourth token is longitude. dddmm.mmmm
-        // fifth token is 'E' or 'W'
-        //ec = decodeLatLon(tokens[4], tokens[5], &degrees);
-        //if (!ec) emit updateLongitude(degrees);
-
-        // sixth token indicates type of fix 0:fix not valid, 1:GPS fix, 2:DGPS fix
-        emit updateFixQuality(tokens[6].toInt());
-
-        // seventh token is, number of satellites used to calculate the fix
-        emit updateSatsInUse(tokens[7].toInt());
-
-        // eighth token is horizontal dilution of precision, hdop
-        //emit updateHDOP(tokens[8].toDouble());
-
-        // ninth token is antenna height above mean sea level, in meters.
-        //double antennaHeight = tokens[9].toDouble();
-        // eleventh token is the geoidal separation in meters.
-        //double geoidalSeparation = tokens[11].toDouble();
-        //double height = antennaHeight + geoidalSeparation;
-        // the above is the height, in meters, above the surface of the ellipsoid?
-
-        emit updateAltitude(tokens[9].toDouble()); // above mean sea level in meters
-
+    } else if (tokens[0].mid(2,3) == QString("GSA")) {
+        emit updatePdop(tokens[15].toDouble());
+        emit updateHdop(tokens[16].toDouble());
+        emit updateVdop(tokens[17].toDouble());
 
     } else if (tokens[0].mid(2,3) == QString("RMC")) {
-        // first token is UTC hhmmss.sss
-        int hours, minutes, seconds;
-        decodeUTC(tokens[1], &hours, &minutes, &seconds);
-        QTime time(hours, minutes, seconds, 0);
-        if (time.isValid() && !time.isNull()) emit updateTime(time);
-
-        // second token is a single letter indicating fix status, A-->valid fix, V-->not valid fix
-        emit updateFixStatus(tokens[2].at(0));
-
-        // third token is latitude, ddmm.mmmm and the fourth token is 'N' or 'S'
-        double degrees;
-        int ec = decodeLatLon(tokens[3], tokens[4], &degrees);
-        if (!ec) emit updateLatitude(degrees);
-
-        // fifth token is longitude, dddmm.mmmm and the sixth token is 'E' or 'W'
-        ec = decodeLatLon(tokens[5], tokens[6], &degrees);
-        if (!ec) emit updateLongitude(degrees);
-
-        // ninth token is the UTC date, ddmmyy
-        int day, month, year;
-        day = tokens[9].mid(0,2).toInt();
-        month = tokens[9].mid(2,2).toInt();
-        year =  tokens[9].mid(4,2).toInt() + 2000;
-        QDate date(year, month, day);
-        if (date.isValid() && !date.isNull()) emit updateDate(date);
-
-        // twelfth token is a single letter indicating mode {N,A,D}
-        emit updateFixMode(tokens[12].at(0));
+        decodeRMC(tokens);
 
     } else if (tokens[0].mid(2,3) == QString("VTG")) {
         emit updateDirectionOfTravel(tokens[1].toDouble());
@@ -113,6 +59,84 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
         emit updateGloSatsInView(tokens[3].toInt());
     }
 }
+
+
+// ---------------------------------------------------------------------------
+int MessageDecoder::decodeGGA(QStringList const& tokens)
+{ 
+    // first token is UTC, format is, hhmmss.sss
+    //int hours, minutes, seconds;
+    //decodeUTC(tokens[1], &hours, &minutes, &seconds);
+    //QTime time(hours, minutes, seconds, 0);
+    //emit updateTime(time);
+
+    // second token is latitude. format is, ddmm.mmmm
+    // third token is 'N' or 'S'
+    //double degrees;
+    //int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
+    //if (!ec) emit updateLatitude(degrees);
+
+    // fourth token is longitude. dddmm.mmmm
+    // fifth token is 'E' or 'W'
+    //ec = decodeLatLon(tokens[4], tokens[5], &degrees);
+    //if (!ec) emit updateLongitude(degrees);
+
+    // sixth token indicates type of fix 0:fix not valid, 1:GPS fix, 2:DGPS fix
+    emit updateFixQuality(tokens[6].toInt());
+
+    // seventh token is, number of satellites used to calculate the fix
+    emit updateSatsInUse(tokens[7].toInt());
+
+    // eighth token is horizontal dilution of precision, hdop
+    //emit updateHDOP(tokens[8].toDouble());
+
+    // ninth token is antenna height above mean sea level, in meters.
+    //double antennaHeight = tokens[9].toDouble();
+    // eleventh token is the geoidal separation in meters.
+    //double geoidalSeparation = tokens[11].toDouble();
+    //double height = antennaHeight + geoidalSeparation;
+    // the above is the height, in meters, above the surface of the ellipsoid?
+
+    emit updateAltitude(tokens[9].toDouble()); // above mean sea level in meters
+
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
+int MessageDecoder::decodeRMC(QStringList const& tokens)
+{ 
+    // first token is UTC hhmmss.sss
+    int hours, minutes, seconds;
+    decodeUTC(tokens[1], &hours, &minutes, &seconds);
+    QTime time(hours, minutes, seconds, 0);
+    if (time.isValid() && !time.isNull()) emit updateTime(time);
+
+    // second token is a single letter indicating fix status, A-->valid fix, V-->not valid fix
+    emit updateFixStatus(tokens[2].at(0));
+
+    // third token is latitude, ddmm.mmmm and the fourth token is 'N' or 'S'
+    double degrees;
+    int ec = decodeLatLon(tokens[3], tokens[4], &degrees);
+    if (!ec) emit updateLatitude(degrees);
+
+    // fifth token is longitude, dddmm.mmmm and the sixth token is 'E' or 'W'
+    ec = decodeLatLon(tokens[5], tokens[6], &degrees);
+    if (!ec) emit updateLongitude(degrees);
+
+    // ninth token is the UTC date, ddmmyy
+    int day, month, year;
+    day = tokens[9].mid(0,2).toInt();
+    month = tokens[9].mid(2,2).toInt();
+    year =  tokens[9].mid(4,2).toInt() + 2000;
+    QDate date(year, month, day);
+    if (date.isValid() && !date.isNull()) emit updateDate(date);
+
+    // twelfth token is a single letter indicating mode {N,A,D}
+    emit updateFixMode(tokens[12].at(0));
+
+    return 0;
+}
+
 
 
 // ---------------------------------------------------------------------------
@@ -153,3 +177,4 @@ int decodeLatLon(QString const& magnitude, QString const& direction, double* deg
 
     return rc;
 }
+
