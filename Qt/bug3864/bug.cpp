@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     doc.setContent(dynamic_cast<QIODevice*>(&f), false);
 
     QDomNodeList nodes = doc.elementsByTagName(QString("pythonpath"));
-    for (unsigned int i = 0; i < nodes.length(); ++i) {
+    for (int i = 0; i < nodes.length(); ++i) {
         QString s;
         s = nodes.at(i).toElement().text();
         s.replace(QString("$PYTHONHOME"), QString("/usr/bin/python27"));
