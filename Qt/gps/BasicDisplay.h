@@ -15,7 +15,13 @@ class BasicDisplay : public QWidget
         BasicDisplay(QWidget* parent=0);
         virtual ~BasicDisplay();
 
+    signals:
+        void sendMessage(QString const&);
+
     public slots:
+        void onSendButtonClicked();
+        void onProprietaryMessageReceived(QString const&);
+
         void setTime(QTime const&);
         void setDate(QDate const&);
         void setLatitude(double);

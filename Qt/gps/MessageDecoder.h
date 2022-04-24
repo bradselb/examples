@@ -34,6 +34,8 @@ class MessageDecoder : public QObject
         void updateDirectionOfTravel(double); // VTG
         void updateSpeedOfTravelKmPerHr(double); // VTG
 
+        void proprietaryMessageReceived(QString const&);
+
 
     public slots:
         void decodeNmeaSentence(QString const&);

@@ -35,6 +35,8 @@ int main(int argc, char* argv[])
     QObject::connect(decoder, SIGNAL(updateDirectionOfTravel(double)), &basicdisplay, SLOT(setDirectionOfTravel(double)));
     QObject::connect(decoder, SIGNAL(updateSpeedOfTravelKmPerHr(double)), &basicdisplay, SLOT(setSpeedOfTravelKmPerHr(double)));
 
+    QObject::connect(decoder, SIGNAL(proprietaryMessageReceived(QString const&)), &basicdisplay, SLOT(onProprietaryMessageReceived(QString const&)));
+    //QObject::connect(decoder, SIGNAL(), &basicdisplay, SLOT());
 
     QSerialPort* serialport = new QSerialPort("/dev/ttyUSB0");
     serialport->setBaudRate(QSerialPort::Baud9600);
@@ -45,6 +47,7 @@ int main(int argc, char* argv[])
     GpsReceiver* gps = new GpsReceiver(serialport, &basicdisplay);
 
     QObject::connect(gps, SIGNAL(nmeaSentence(QString const&)), decoder, SLOT(decodeNmeaSentence(QString const&)));
+    QObject::connect(&basicdisplay, SIGNAL(sendMessage(QString const&)), gps, SLOT(sendMessage(QString const&)));
 
     basicdisplay.show();
 

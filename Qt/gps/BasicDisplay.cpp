@@ -8,7 +8,7 @@
 #include <QTime>
 #include <QTimeZone>
 
-#include <QDebug>
+//#include <QDebug>
 
 // ---------------------------------------------------------------------------
 BasicDisplay::BasicDisplay(QWidget* parent)
@@ -30,6 +30,9 @@ BasicDisplay::BasicDisplay(QWidget* parent)
 
     m_ui->latitude->setText("-99.999999");
     m_ui->longitude->setText("-999.999999");
+
+    connect(m_ui->sendButton, SIGNAL(clicked()), this, SLOT(onSendButtonClicked()));
+    connect(m_ui->messageEdit, SIGNAL(returnPressed()), this, SLOT(onSendButtonClicked()));
 }
 
 // ---------------------------------------------------------------------------
@@ -38,6 +41,19 @@ BasicDisplay::~BasicDisplay()
     delete m_datetime;
     delete m_elapsedtime;
     delete m_ui;
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::onSendButtonClicked()
+{
+    QString message(m_ui->messageEdit->text());
+    emit sendMessage(message);
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::onProprietaryMessageReceived(QString const& message)
+{
+    m_ui->replyEdit->append(message);
 }
 
 // ---------------------------------------------------------------------------
@@ -85,30 +101,30 @@ void BasicDisplay::setAltitude(double alt)
 void BasicDisplay::setFixQuality(int k)
 {
     if (m_fixquality != k) {
-        float elapsedtime = m_elapsedtime->elapsed()/1000.0;
-        qDebug() << "Fix quality transitioned from" << m_fixquality << "to" << k << "at" << elapsedtime << "seconds";
+        //float elapsedtime = m_elapsedtime->elapsed()/1000.0;
+        //qDebug() << "Fix quality transitioned from" << m_fixquality << "to" << k << "at" << elapsedtime << "seconds";
         m_fixquality = k;
     }
-    m_ui->fixquality->setText(QString("%1").arg(m_fixquality));
+    //m_ui->fixquality->setText(QString("%1").arg(m_fixquality));
 }
 
 // ---------------------------------------------------------------------------
 void BasicDisplay::setFixStatus(QChar const& status)
 {
     if (m_fixstatus !=  status.cell()) {
-        float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
-        qDebug() << "Fix status transitioned from" << QChar(m_fixstatus) << "to" << status << "at" << elapsedtime << "seconds";
+        //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
+        //qDebug() << "Fix status transitioned from" << QChar(m_fixstatus) << "to" << status << "at" << elapsedtime << "seconds";
         m_fixstatus = status.cell();
     }
-    m_ui->fixstatus->setText(status);
+    //m_ui->fixstatus->setText(status);
 }
 
 // ---------------------------------------------------------------------------
 void BasicDisplay::setFixMode(QChar const& mode)
 {
     if (m_fixmode != mode.cell()) {
-        float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
-        qDebug() << "Fix mode transitioned from" << QChar(m_fixmode) << "to" << mode << "at" << elapsedtime << "seconds";
+        //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
+        //qDebug() << "Fix mode transitioned from" << QChar(m_fixmode) << "to" << mode << "at" << elapsedtime << "seconds";
         m_fixmode = mode.cell();
     }
     m_ui->fixmode->setText(mode);
@@ -136,8 +152,8 @@ void BasicDisplay::setVdop(double vdop)
 void BasicDisplay::setSatsInUse(int n)
 {
     if (n != m_gnsinuse) {
-        float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
-        qDebug() << "GNSS Satellites in use changed from" << m_gnsinuse  << "to" << n << "at" << elapsedtime << "seconds";
+        //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
+        //qDebug() << "GNSS Satellites in use changed from" << m_gnsinuse  << "to" << n << "at" << elapsedtime << "seconds";
         m_gnsinuse = n;
     }
     m_ui->inuse->setText(QString("%1").arg(n));
@@ -147,8 +163,8 @@ void BasicDisplay::setSatsInUse(int n)
 void BasicDisplay::setGloSatsInView(int n)
 {
     if (n != m_glinview) {
-        float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
-        qDebug() << "GLONASS Satellites in view changed from" << m_glinview  << "to" << n << "at" << elapsedtime << "seconds";
+        //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
+        //qDebug() << "GLONASS Satellites in view changed from" << m_glinview  << "to" << n << "at" << elapsedtime << "seconds";
         m_glinview = n;
     }
     m_ui->inview->setText(QString("%1").arg(m_gpinview + m_glinview));
@@ -158,8 +174,8 @@ void BasicDisplay::setGloSatsInView(int n)
 void BasicDisplay::setGpsSatsInView(int n)
 {
     if (n != m_gpinview) {
-        float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
-        qDebug() << "GPS Satellites in view changed from" << m_gpinview  << "to" << n << "at" << elapsedtime << "seconds";
+        //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
+        //qDebug() << "GPS Satellites in view changed from" << m_gpinview  << "to" << n << "at" << elapsedtime << "seconds";
         m_gpinview = n;
     }
     m_ui->inview->setText(QString("%1").arg(m_gpinview + m_glinview));

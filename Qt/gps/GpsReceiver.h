@@ -22,6 +22,9 @@ class GpsReceiver : public QObject
     signals:
         void nmeaSentence(QString const&);
 
+    public slots:
+        void sendMessage(QString const&);
+
     private slots:
         void onReadyRead();
 

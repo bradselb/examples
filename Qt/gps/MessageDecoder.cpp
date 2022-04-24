@@ -5,6 +5,8 @@
 #include <QTime>
 #include <QDate>
 
+//#include <QDebug>
+
 
 // ---------------------------------------------------------------------------
 // local functions
@@ -57,6 +59,11 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
 
     } else if (tokens[0] == QString("GLGSV")) {
         emit updateGloSatsInView(tokens[3].toInt());
+
+    } else if (tokens[0].left(4) == QString("PMTK")) {
+        // a proprietary MTK sentence.
+        //qDebug() << message;
+        proprietaryMessageReceived(message);
     }
 }
 
@@ -72,32 +79,27 @@ int MessageDecoder::decodeGGA(QStringList const& tokens)
 
     // second token is latitude. format is, ddmm.mmmm
     // third token is 'N' or 'S'
+    // fourth token is longitude. dddmm.mmmm
+    // fifth token is 'E' or 'W'
     //double degrees;
     //int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
     //if (!ec) emit updateLatitude(degrees);
-
-    // fourth token is longitude. dddmm.mmmm
-    // fifth token is 'E' or 'W'
     //ec = decodeLatLon(tokens[4], tokens[5], &degrees);
     //if (!ec) emit updateLongitude(degrees);
 
-    // sixth token indicates type of fix 0:fix not valid, 1:GPS fix, 2:DGPS fix
+    // 0:no fix, 1:GPS fix, 2:DGPS fix
     emit updateFixQuality(tokens[6].toInt());
 
-    // seventh token is, number of satellites used to calculate the fix
     emit updateSatsInUse(tokens[7].toInt());
 
     // eighth token is horizontal dilution of precision, hdop
     //emit updateHDOP(tokens[8].toDouble());
 
-    // ninth token is antenna height above mean sea level, in meters.
-    //double antennaHeight = tokens[9].toDouble();
-    // eleventh token is the geoidal separation in meters.
-    //double geoidalSeparation = tokens[11].toDouble();
-    //double height = antennaHeight + geoidalSeparation;
-    // the above is the height, in meters, above the surface of the ellipsoid?
+    double antennaHeight = tokens[9].toDouble(); //above mean sea level, in meters.
+    emit updateAltitude(antennaHeight);
 
-    emit updateAltitude(tokens[9].toDouble()); // above mean sea level in meters
+    //double geoidalSeparation = tokens[11].toDouble();
+    //double heightAboveElipsoid = antennaHeight + geoidalSeparation;
 
     return 0;
 }
