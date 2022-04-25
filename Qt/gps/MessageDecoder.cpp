@@ -43,22 +43,22 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
         decodeGGA(tokens);
 
     } else if (tokens[0].mid(2,3) == QString("GSA")) {
-        emit updatePdop(tokens[15].toDouble());
-        emit updateHdop(tokens[16].toDouble());
-        emit updateVdop(tokens[17].toDouble());
+        emit pdop(tokens[15].toDouble());
+        emit hdop(tokens[16].toDouble());
+        emit vdop(tokens[17].toDouble());
 
     } else if (tokens[0].mid(2,3) == QString("RMC")) {
         decodeRMC(tokens);
 
     } else if (tokens[0].mid(2,3) == QString("VTG")) {
-        emit updateDirectionOfTravel(tokens[1].toDouble());
-        emit updateSpeedOfTravelKmPerHr(tokens[7].toDouble());
+        emit directionOfTravel(tokens[1].toDouble());
+        emit speedOfTravelKmPerHr(tokens[7].toDouble());
 
     } else if (tokens[0] == QString("GPGSV")) {
-        emit updateGpsSatsInView(tokens[3].toInt());
+        emit gpsSatsInView(tokens[3].toInt());
 
     } else if (tokens[0] == QString("GLGSV")) {
-        emit updateGloSatsInView(tokens[3].toInt());
+        emit gloSatsInView(tokens[3].toInt());
 
     } else if (tokens[0].left(4) == QString("PMTK")) {
         // a proprietary MTK sentence.
@@ -74,8 +74,7 @@ int MessageDecoder::decodeGGA(QStringList const& tokens)
     // first token is UTC, format is, hhmmss.sss
     //int hours, minutes, seconds;
     //decodeUTC(tokens[1], &hours, &minutes, &seconds);
-    //QTime time(hours, minutes, seconds, 0);
-    //emit updateTime(time);
+    //emit time(QTime(hours, minutes, seconds, 0));
 
     // second token is latitude. format is, ddmm.mmmm
     // third token is 'N' or 'S'
@@ -83,20 +82,20 @@ int MessageDecoder::decodeGGA(QStringList const& tokens)
     // fifth token is 'E' or 'W'
     //double degrees;
     //int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
-    //if (!ec) emit updateLatitude(degrees);
+    //if (!ec) emit latitude(degrees);
     //ec = decodeLatLon(tokens[4], tokens[5], &degrees);
-    //if (!ec) emit updateLongitude(degrees);
+    //if (!ec) emit longitude(degrees);
 
     // 0:no fix, 1:GPS fix, 2:DGPS fix
-    emit updateFixQuality(tokens[6].toInt());
+    emit fixQuality(tokens[6].toInt());
 
-    emit updateSatsInUse(tokens[7].toInt());
+    emit satsInUse(tokens[7].toInt());
 
     // eighth token is horizontal dilution of precision, hdop
-    //emit updateHDOP(tokens[8].toDouble());
+    //double hdop = tokens[8].toDouble());
 
     double antennaHeight = tokens[9].toDouble(); //above mean sea level, in meters.
-    emit updateAltitude(antennaHeight);
+    emit altitude(antennaHeight);
 
     //double geoidalSeparation = tokens[11].toDouble();
     //double heightAboveElipsoid = antennaHeight + geoidalSeparation;
@@ -110,31 +109,29 @@ int MessageDecoder::decodeRMC(QStringList const& tokens)
     // first token is UTC hhmmss.sss
     int hours, minutes, seconds;
     decodeUTC(tokens[1], &hours, &minutes, &seconds);
-    QTime time(hours, minutes, seconds, 0);
-    if (time.isValid() && !time.isNull()) emit updateTime(time);
+    emit time(QTime(hours, minutes, seconds, 0));
 
     // second token is a single letter indicating fix status, A-->valid fix, V-->not valid fix
-    emit updateFixStatus(tokens[2].at(0));
+    emit fixStatus(tokens[2].at(0));
 
     // third token is latitude, ddmm.mmmm and the fourth token is 'N' or 'S'
     double degrees;
     int ec = decodeLatLon(tokens[3], tokens[4], &degrees);
-    if (!ec) emit updateLatitude(degrees);
+    if (!ec) emit latitude(degrees);
 
     // fifth token is longitude, dddmm.mmmm and the sixth token is 'E' or 'W'
     ec = decodeLatLon(tokens[5], tokens[6], &degrees);
-    if (!ec) emit updateLongitude(degrees);
+    if (!ec) emit longitude(degrees);
 
     // ninth token is the UTC date, ddmmyy
     int day, month, year;
     day = tokens[9].mid(0,2).toInt();
     month = tokens[9].mid(2,2).toInt();
     year =  tokens[9].mid(4,2).toInt() + 2000;
-    QDate date(year, month, day);
-    if (date.isValid() && !date.isNull()) emit updateDate(date);
+    emit date(QDate(year, month, day));
 
     // twelfth token is a single letter indicating mode {N,A,D}
-    emit updateFixMode(tokens[12].at(0));
+    emit fixMode(tokens[12].at(0));
 
     return 0;
 }

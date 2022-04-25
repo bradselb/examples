@@ -22,23 +22,23 @@ class BasicDisplay : public QWidget
         void onSendButtonClicked();
         void onProprietaryMessageReceived(QString const&);
 
-        void setTime(QTime const&);
-        void setDate(QDate const&);
-        void setLatitude(double);
-        void setLongitude(double);
-        void setAltitude(double);
-        void setFixQuality(int);
-        void setFixStatus(QChar const&);
-        void setFixMode(QChar const&);
-        void setPdop(double);
-        void setHdop(double);
-        void setVdop(double);
-        void setSatsInUse(int);
-        void setGloSatsInView(int);
-        void setGpsSatsInView(int);
+        void onTime(QTime const&);
+        void onDate(QDate const&);
+        void onLatitude(double);
+        void onLongitude(double);
+        void onAltitude(double);
+        void onFixQuality(int);
+        void onFixStatus(QChar const&);
+        void onFixMode(QChar const&);
+        void onPdop(double);
+        void onHdop(double);
+        void onVdop(double);
+        void onSatsInUse(int);
+        void onGloSatsInView(int);
+        void onGpsSatsInView(int);
 
-        void setDirectionOfTravel(double);
-        void setSpeedOfTravelKmPerHr(double);
+        void onDirectionOfTravel(double);
+        void onSpeedOfTravelKmPerHr(double);
 
     private: // functions
         void setDateTime();

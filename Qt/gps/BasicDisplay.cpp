@@ -57,48 +57,42 @@ void BasicDisplay::onProprietaryMessageReceived(QString const& message)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setTime(QTime const& t)
+void BasicDisplay::onTime(QTime const& t)
 {
     m_datetime->setTime(t);
     this->setDateTime();
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setDate(QDate const& date)
+void BasicDisplay::onDate(QDate const& date)
 {
     m_datetime->setDate(date);
     this->setDateTime();
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setDateTime()
-{
-    m_ui->datetime->setText(m_datetime->toLocalTime().toString("ddd, dd-MMM-yyyy  hh:mm:ss a"));
-}
-
-// ---------------------------------------------------------------------------
-void BasicDisplay::setLatitude(double lat)
+void BasicDisplay::onLatitude(double lat)
 {
     m_latitude = lat;
     m_ui->latitude->setText(QString("%1").arg(m_latitude,0,'f',6));
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setLongitude(double lon)
+void BasicDisplay::onLongitude(double lon)
 {
     m_longitude = lon;
     m_ui->longitude->setText(QString("%1").arg(m_longitude,0,'f',6));
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setAltitude(double alt)
+void BasicDisplay::onAltitude(double alt)
 {
     m_altitude = alt;
     m_ui->altitude->setText(QString("%1").arg(m_altitude,0,'f',1));
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setFixQuality(int k)
+void BasicDisplay::onFixQuality(int k)
 {
     if (m_fixquality != k) {
         //float elapsedtime = m_elapsedtime->elapsed()/1000.0;
@@ -109,7 +103,7 @@ void BasicDisplay::setFixQuality(int k)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setFixStatus(QChar const& status)
+void BasicDisplay::onFixStatus(QChar const& status)
 {
     if (m_fixstatus !=  status.cell()) {
         //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
@@ -120,7 +114,7 @@ void BasicDisplay::setFixStatus(QChar const& status)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setFixMode(QChar const& mode)
+void BasicDisplay::onFixMode(QChar const& mode)
 {
     if (m_fixmode != mode.cell()) {
         //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
@@ -131,25 +125,25 @@ void BasicDisplay::setFixMode(QChar const& mode)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setPdop(double pdop)
+void BasicDisplay::onPdop(double pdop)
 {
     m_ui->pdop->setText(QString("%1").arg(pdop, 0, 'f', 2));
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setHdop(double hdop)
+void BasicDisplay::onHdop(double hdop)
 {
     m_ui->hdop->setText(QString("%1").arg(hdop, 0, 'f', 2));
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setVdop(double vdop)
+void BasicDisplay::onVdop(double vdop)
 {
     m_ui->vdop->setText(QString("%1").arg(vdop, 0, 'f', 2));
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setSatsInUse(int n)
+void BasicDisplay::onSatsInUse(int n)
 {
     if (n != m_gnsinuse) {
         //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
@@ -160,7 +154,7 @@ void BasicDisplay::setSatsInUse(int n)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setGloSatsInView(int n)
+void BasicDisplay::onGloSatsInView(int n)
 {
     if (n != m_glinview) {
         //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
@@ -171,7 +165,7 @@ void BasicDisplay::setGloSatsInView(int n)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setGpsSatsInView(int n)
+void BasicDisplay::onGpsSatsInView(int n)
 {
     if (n != m_gpinview) {
         //float elapsedtime = m_elapsedtime->elapsed() / 1000.0;
@@ -182,7 +176,7 @@ void BasicDisplay::setGpsSatsInView(int n)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setDirectionOfTravel(double direction)
+void BasicDisplay::onDirectionOfTravel(double direction)
 {
     //QString value = QString("%1").arg(direction);
     //int n = 1 + value.indexOf('.');// index of first digit to right of the decimal point.
@@ -192,8 +186,14 @@ void BasicDisplay::setDirectionOfTravel(double direction)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::setSpeedOfTravelKmPerHr(double speed)
+void BasicDisplay::onSpeedOfTravelKmPerHr(double speed)
 {
     m_ui->speed->setText(QString("%1").arg(speed,0,'f',1));
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::setDateTime()
+{
+    m_ui->datetime->setText(m_datetime->toLocalTime().toString("ddd, dd-MMM-yyyy  hh:mm:ss a"));
 }
 
