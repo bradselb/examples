@@ -41,6 +41,9 @@ class BasicDisplay : public QWidget
         void onDirectionOfTravel(double);
         void onSpeedOfTravelKmPerHr(double);
 
+        void siUnits();
+        void usUnits();
+
     private: // functions
         void setDateTime();
 
@@ -58,6 +61,7 @@ class BasicDisplay : public QWidget
         int m_fixstatus;
         int m_fixmode;
         int m_fixtype;
+        enum {SI_UNITS = 0, US_UNITS} m_units;
 };
 
 #endif //!defined BASICDISPLAY_H

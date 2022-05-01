@@ -18,6 +18,7 @@ BasicDisplay::BasicDisplay(QWidget* parent)
   , m_glinview(0), m_gpinview(0), m_gnsinuse(0)
   , m_fixquality(-1), m_fixstatus(QChar('-').cell()), m_fixmode(QChar('-').cell())
   , m_fixtype(-1)
+  , m_units(SI_UNITS)
 {
     m_ui = new Ui::BasicDisplay;
     m_ui->setupUi(this);
@@ -89,7 +90,13 @@ void BasicDisplay::onLongitude(double lon)
 void BasicDisplay::onAltitude(double alt)
 {
     m_altitude = alt;
-    m_ui->altitude->setText(QString("%1").arg(m_altitude,0,'f',1));
+
+    if (m_units == US_UNITS) {
+        alt = alt / 0.3048;
+        m_ui->altitude->setText(QString("%1 ft").arg(alt,0,'f',1));
+    } else {
+        m_ui->altitude->setText(QString("%1 m").arg(alt,0,'f',1));
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -195,7 +202,24 @@ void BasicDisplay::onDirectionOfTravel(double direction)
 // ---------------------------------------------------------------------------
 void BasicDisplay::onSpeedOfTravelKmPerHr(double speed)
 {
-    m_ui->speed->setText(QString("%1").arg(speed,0,'f',1));
+    if (m_units == US_UNITS) {
+        speed = speed * 0.62137119;
+        m_ui->speed->setText(QString("%1 mph").arg(speed,0,'f',1));
+    } else {
+        m_ui->speed->setText(QString("%1 km/hr").arg(speed,0,'f',1));
+    }
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::siUnits()
+{
+    m_units = SI_UNITS;;
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::usUnits()
+{
+    m_units = US_UNITS;;
 }
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+#include <QDateTime>
+
 #include <time.h> // strftime(), struct tm
 #include <string.h> // memset()
 #include <stdio.h> // snprintf()
@@ -14,13 +16,27 @@ TrackLogger::TrackLogger(QObject* parent)
     , m_interval(0)
     , m_enable(0)
 {
-    m_interval = 5;
-    m_enable = 1; // TODO: be enabled by a signal from the UI
+    m_interval = 5; // menu item? cmd line param?
 }
 
 
 TrackLogger::~TrackLogger()
 {
+}
+
+
+void TrackLogger::start()
+{
+    // create a new file name
+    QString timestamp(QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.sst"));
+    m_filename = QString("gps_%1\.log").arg(timestamp);
+    m_enable = 1;
+}
+
+
+void TrackLogger::stop()
+{
+    m_enable = 0;
 }
 
 
@@ -48,7 +64,7 @@ void TrackLogger::onRMC(int hours, int minutes, int seconds, int fixstatus, doub
 
     now = mktime(&t);
 
-    if (now != (time_t)-1)
+    if (now != (time_t)-1 && m_enable)
     {
         if ((difftime(now, m_prev) >= m_interval) && (seconds % m_interval == 0) && (fixstatus == 'A'))
         {

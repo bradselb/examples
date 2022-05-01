@@ -18,9 +18,11 @@ MainWindow::MainWindow()
     this->setMinimumSize(400,250);
     this->setMaximumSize(400,500);
 
-    createActions();
-    createMenus();
-    createToolBar();
+    createToolBars();
+    statusBar()->showMessage("Ready");
+
+    connect(siUnitsAct, SIGNAL(triggered()), m_display, SLOT(siUnits()));
+    connect(usUnitsAct, SIGNAL(triggered()), m_display, SLOT(usUnits()));
 
     MessageDecoder* m_decoder = new MessageDecoder(this);
 
@@ -68,40 +70,37 @@ MainWindow::MainWindow()
     QObject::connect(m_decoder, SIGNAL(RMC(int,int,int,int,double,double,int,int,int,int)),
                      logger,    SLOT(onRMC(int,int,int,int,double,double,int,int,int,int)));
 
+    connect(startAct, SIGNAL(triggered()), logger, SLOT(start()));
+    connect(stopAct, SIGNAL(triggered()), logger, SLOT(stop()));
 };
 
-void MainWindow::newFile(){}
-void MainWindow::setFile(){}
-void MainWindow::startLogging(){}
-void MainWindow::stopLogging(){}
-void MainWindow::changeDisplayedUnits(){}
-
-void MainWindow::createActions()
+// ---------------------------------------------------------------------------
+void MainWindow::setStatus(QString const& message)
 {
-    newAct = new QAction(tr("&New"), this);
-    newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(tr("Create a new logfile"));
-    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
-
-    setAct = new QAction(tr("&Open..."), this);
-    setAct->setShortcuts(QKeySequence::Open);
-    setAct->setStatusTip(tr("Open an existing logfile"));
-    connect(setAct, SIGNAL(triggered()), this, SLOT(setFile()));
-
+    statusBar()->showMessage(message);
 }
 
-
-
-void MainWindow::createMenus()
+// ---------------------------------------------------------------------------
+void MainWindow::createToolBars()
 {
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(newAct);
-    fileMenu->addAction(setAct);
-}
+    loggingToolBar = addToolBar("Logging");
 
+    startAct = new QAction("Start", this);
+    startAct->setStatusTip("Start Logging");
+    loggingToolBar->addAction(startAct);
 
-void MainWindow::createToolBar()
-{
-    toolBar = addToolBar(tr("Tools"));
+    stopAct = new QAction("Stop", this);
+    stopAct->setStatusTip("Stop Logging");
+    loggingToolBar->addAction(stopAct);
+
+    unitsToolBar = addToolBar("Units");
+
+    siUnitsAct = new QAction("meters", this);
+    siUnitsAct->setStatusTip("Display Meters and Km/Hr");;
+    unitsToolBar->addAction(siUnitsAct);
+
+    usUnitsAct = new QAction("feet", this);
+    usUnitsAct->setStatusTip("Display Feet and MPH");;
+    unitsToolBar->addAction(usUnitsAct);
 }
 
