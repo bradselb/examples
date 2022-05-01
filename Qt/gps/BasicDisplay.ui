@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>250</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -116,7 +116,7 @@
   <widget class="QLabel" name="inuse">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>300</x>
      <y>190</y>
      <width>31</width>
      <height>21</height>
@@ -158,9 +158,9 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>230</x>
      <y>190</y>
-     <width>31</width>
+     <width>61</width>
      <height>21</height>
     </rect>
    </property>
@@ -170,7 +170,7 @@
     </font>
    </property>
    <property name="text">
-    <string>use</string>
+    <string>active</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -179,7 +179,7 @@
   <widget class="QLabel" name="inview">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>190</x>
      <y>190</y>
      <width>30</width>
      <height>21</height>
@@ -200,9 +200,9 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>110</x>
      <y>190</y>
-     <width>51</width>
+     <width>71</width>
      <height>21</height>
     </rect>
    </property>
@@ -212,7 +212,7 @@
     </font>
    </property>
    <property name="text">
-    <string>view</string>
+    <string>in view</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -221,9 +221,9 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>190</y>
-     <width>51</width>
+     <width>61</width>
      <height>21</height>
     </rect>
    </property>
@@ -341,7 +341,7 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_10">
+  <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -383,7 +383,7 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_11">
+  <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -425,7 +425,7 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_12">
+  <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
      <x>240</x>

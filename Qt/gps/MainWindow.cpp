@@ -2,6 +2,7 @@
 #include "BasicDisplay.h"
 #include "MessageDecoder.h"
 #include "GpsReceiver.h"
+#include "Logger.h"
 
 #include <QSerialPort>
 #include <QMenu>
@@ -17,6 +18,9 @@ MainWindow::MainWindow()
     this->setMinimumSize(400,250);
     this->setMaximumSize(400,500);
 
+    createActions();
+    createMenus();
+    createToolBar();
 
     MessageDecoder* m_decoder = new MessageDecoder(this);
 
@@ -45,6 +49,7 @@ MainWindow::MainWindow()
     QObject::connect(m_decoder, SIGNAL(proprietaryMessageReceived(QString const&)), m_display, SLOT(onProprietaryMessageReceived(QString const&)));
     //QObject::connect(m_decoder, SIGNAL(), m_display, SLOT());
 
+
     QSerialPort* m_serialport = new QSerialPort("/dev/ttyUSB0");
     m_serialport->setBaudRate(QSerialPort::Baud9600);
     m_serialport->setDataBits(QSerialPort::Data8);
@@ -52,8 +57,51 @@ MainWindow::MainWindow()
     m_serialport->setStopBits(QSerialPort::OneStop);
 
     GpsReceiver* gps = new GpsReceiver(m_serialport, this);
-
     QObject::connect(gps, SIGNAL(nmeaSentence(QString const&)), m_decoder, SLOT(decodeNmeaSentence(QString const&)));
     QObject::connect(m_display, SIGNAL(sendMessage(QString const&)), gps, SLOT(sendMessage(QString const&)));
 
+    TrackLogger* logger = new TrackLogger(this);
+
+    QObject::connect(m_decoder, SIGNAL(GGA(int,int,int,double,double,int,int,double,double,double)),
+                     logger,    SLOT(onGGA(int,int,int,double,double,int,int,double,double,double)));
+
+    QObject::connect(m_decoder, SIGNAL(RMC(int,int,int,int,double,double,int,int,int,int)),
+                     logger,    SLOT(onRMC(int,int,int,int,double,double,int,int,int,int)));
+
 };
+
+void MainWindow::newFile(){}
+void MainWindow::setFile(){}
+void MainWindow::startLogging(){}
+void MainWindow::stopLogging(){}
+void MainWindow::changeDisplayedUnits(){}
+
+void MainWindow::createActions()
+{
+    newAct = new QAction(tr("&New"), this);
+    newAct->setShortcuts(QKeySequence::New);
+    newAct->setStatusTip(tr("Create a new logfile"));
+    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
+
+    setAct = new QAction(tr("&Open..."), this);
+    setAct->setShortcuts(QKeySequence::Open);
+    setAct->setStatusTip(tr("Open an existing logfile"));
+    connect(setAct, SIGNAL(triggered()), this, SLOT(setFile()));
+
+}
+
+
+
+void MainWindow::createMenus()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(newAct);
+    fileMenu->addAction(setAct);
+}
+
+
+void MainWindow::createToolBar()
+{
+    toolBar = addToolBar(tr("Tools"));
+}
+

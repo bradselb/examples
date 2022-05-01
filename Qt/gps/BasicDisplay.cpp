@@ -17,6 +17,7 @@ BasicDisplay::BasicDisplay(QWidget* parent)
   , m_latitude(0.0), m_longitude(0.0), m_altitude(0.0)
   , m_glinview(0), m_gpinview(0), m_gnsinuse(0)
   , m_fixquality(-1), m_fixstatus(QChar('-').cell()), m_fixmode(QChar('-').cell())
+  , m_fixtype(-1)
 {
     m_ui = new Ui::BasicDisplay;
     m_ui->setupUi(this);
@@ -122,6 +123,12 @@ void BasicDisplay::onFixMode(QChar const& mode)
         m_fixmode = mode.cell();
     }
     m_ui->fixmode->setText(mode);
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::onFixType(int fixtype)
+{
+    m_fixtype = fixtype;
 }
 
 // ---------------------------------------------------------------------------

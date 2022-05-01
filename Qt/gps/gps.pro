@@ -10,5 +10,5 @@ QT += serialport
 
 # Input
 FORMS += BasicDisplay.ui
-HEADERS += MainWindow.h GpsReceiver.h MessageDecoder.h BasicDisplay.h
-SOURCES += MainWindow.cpp GpsReceiver.cpp MessageDecoder.cpp BasicDisplay.cpp main.cpp
+HEADERS += MainWindow.h GpsReceiver.h MessageDecoder.h BasicDisplay.h Logger.h
+SOURCES += MainWindow.cpp GpsReceiver.cpp MessageDecoder.cpp BasicDisplay.cpp Logger.cpp main.cpp

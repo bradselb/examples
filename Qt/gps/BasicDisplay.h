@@ -30,6 +30,7 @@ class BasicDisplay : public QWidget
         void onFixQuality(int);
         void onFixStatus(QChar const&);
         void onFixMode(QChar const&);
+        void onFixType(int);
         void onPdop(double);
         void onHdop(double);
         void onVdop(double);
@@ -56,6 +57,7 @@ class BasicDisplay : public QWidget
         int m_fixquality;
         int m_fixstatus;
         int m_fixmode;
+        int m_fixtype;
 };
 
 #endif //!defined BASICDISPLAY_H

@@ -43,16 +43,13 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
         decodeGGA(tokens);
 
     } else if (tokens[0].mid(2,3) == QString("GSA")) {
-        emit pdop(tokens[15].toDouble());
-        emit hdop(tokens[16].toDouble());
-        emit vdop(tokens[17].toDouble());
+        decodeGSA(tokens);
 
     } else if (tokens[0].mid(2,3) == QString("RMC")) {
         decodeRMC(tokens);
 
     } else if (tokens[0].mid(2,3) == QString("VTG")) {
-        emit directionOfTravel(tokens[1].toDouble());
-        emit speedOfTravelKmPerHr(tokens[7].toDouble());
+        decodeVTG(tokens);
 
     } else if (tokens[0] == QString("GPGSV")) {
         emit gpsSatsInView(tokens[3].toInt());
@@ -62,50 +59,69 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
 
     } else if (tokens[0].left(4) == QString("PMTK")) {
         // a proprietary MTK sentence.
-        //qDebug() << message;
-        proprietaryMessageReceived(message);
+        emit proprietaryMessageReceived(message);
     }
 }
 
 
 // ---------------------------------------------------------------------------
 int MessageDecoder::decodeGGA(QStringList const& tokens)
-{ 
+{
     // first token is UTC, format is, hhmmss.sss
-    //int hours, minutes, seconds;
-    //decodeUTC(tokens[1], &hours, &minutes, &seconds);
+    int hours, minutes, seconds;
+    decodeUTC(tokens[1], &hours, &minutes, &seconds);
     //emit time(QTime(hours, minutes, seconds, 0));
 
     // second token is latitude. format is, ddmm.mmmm
     // third token is 'N' or 'S'
+    double lat;
+    int ec = decodeLatLon(tokens[2], tokens[3], &lat);
+    //if (!ec) emit latitude(degrees);
+
     // fourth token is longitude. dddmm.mmmm
     // fifth token is 'E' or 'W'
-    //double degrees;
-    //int ec = decodeLatLon(tokens[2], tokens[3], &degrees);
-    //if (!ec) emit latitude(degrees);
-    //ec = decodeLatLon(tokens[4], tokens[5], &degrees);
+    double lon;
+    ec |= decodeLatLon(tokens[4], tokens[5], &lon);
     //if (!ec) emit longitude(degrees);
 
     // 0:no fix, 1:GPS fix, 2:DGPS fix
-    emit fixQuality(tokens[6].toInt());
+    int fixquality = tokens[6].toInt();
+    emit fixQuality(fixquality);
 
-    emit satsInUse(tokens[7].toInt());
+    int sats = tokens[7].toInt();
+    emit satsInUse(sats);
 
     // eighth token is horizontal dilution of precision, hdop
-    //double hdop = tokens[8].toDouble());
+    double hdop = tokens[8].toDouble();
 
     double antennaHeight = tokens[9].toDouble(); //above mean sea level, in meters.
     emit altitude(antennaHeight);
 
-    //double geoidalSeparation = tokens[11].toDouble();
+    double geoidalSeparation = tokens[11].toDouble();
     //double heightAboveElipsoid = antennaHeight + geoidalSeparation;
+
+    if (!ec) {
+        emit GGA(hours, minutes, seconds, lat, lon, fixquality, sats, hdop, antennaHeight, geoidalSeparation);
+    }
 
     return 0;
 }
 
+
+// ---------------------------------------------------------------------------
+int MessageDecoder::decodeGSA(QStringList const& tokens)
+{
+    emit fixType(tokens[2].toInt());
+    emit pdop(tokens[15].toDouble());
+    emit hdop(tokens[16].toDouble());
+    emit vdop(tokens[17].toDouble());
+    return 0;
+}
+
+
 // ---------------------------------------------------------------------------
 int MessageDecoder::decodeRMC(QStringList const& tokens)
-{ 
+{
     // first token is UTC hhmmss.sss
     int hours, minutes, seconds;
     decodeUTC(tokens[1], &hours, &minutes, &seconds);
@@ -113,15 +129,17 @@ int MessageDecoder::decodeRMC(QStringList const& tokens)
 
     // second token is a single letter indicating fix status, A-->valid fix, V-->not valid fix
     emit fixStatus(tokens[2].at(0));
+    int fixstatus = tokens[2].at(0).cell();
 
     // third token is latitude, ddmm.mmmm and the fourth token is 'N' or 'S'
-    double degrees;
-    int ec = decodeLatLon(tokens[3], tokens[4], &degrees);
-    if (!ec) emit latitude(degrees);
+    double lat=0.0;
+    int ec = decodeLatLon(tokens[3], tokens[4], &lat);
+    if (!ec) emit latitude(lat);
 
     // fifth token is longitude, dddmm.mmmm and the sixth token is 'E' or 'W'
-    ec = decodeLatLon(tokens[5], tokens[6], &degrees);
-    if (!ec) emit longitude(degrees);
+    double lon=0.0;
+    ec = decodeLatLon(tokens[5], tokens[6], &lon);
+    if (!ec) emit longitude(lon);
 
     // ninth token is the UTC date, ddmmyy
     int day, month, year;
@@ -132,7 +150,19 @@ int MessageDecoder::decodeRMC(QStringList const& tokens)
 
     // twelfth token is a single letter indicating mode {N,A,D}
     emit fixMode(tokens[12].at(0));
+    int fixmode = tokens[12].at(0).cell();
 
+    emit RMC(hours, minutes, seconds, fixstatus, lat, lon, day, month, year, fixmode);
+
+    return 0;
+}
+
+
+// ---------------------------------------------------------------------------
+int MessageDecoder::decodeVTG(QStringList const& tokens)
+{
+    emit directionOfTravel(tokens[1].toDouble());
+    emit speedOfTravelKmPerHr(tokens[7].toDouble());
     return 0;
 }
 
