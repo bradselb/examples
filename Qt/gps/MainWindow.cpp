@@ -15,8 +15,8 @@ MainWindow::MainWindow()
 {
     m_display = new BasicDisplay();
     this->setCentralWidget(m_display);
-    this->setMinimumSize(400,250);
-    this->setMaximumSize(400,500);
+    this->setMinimumSize(400,220);
+    this->setMaximumSize(400,640);
 
     createToolBars();
     statusBar()->showMessage("Ready");
@@ -72,6 +72,7 @@ MainWindow::MainWindow()
 
     connect(startAct, SIGNAL(triggered()), logger, SLOT(start()));
     connect(stopAct, SIGNAL(triggered()), logger, SLOT(stop()));
+    connect(m_display, SIGNAL(logIntervalChange(QString const&)), logger, SLOT(onLogIntervalChange(QString const&)));
 };
 
 // ---------------------------------------------------------------------------

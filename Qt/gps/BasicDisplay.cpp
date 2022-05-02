@@ -33,8 +33,8 @@ BasicDisplay::BasicDisplay(QWidget* parent)
     m_ui->latitude->setText("-99.999999");
     m_ui->longitude->setText("-999.999999");
 
-    connect(m_ui->sendButton, SIGNAL(clicked()), this, SLOT(onSendButtonClicked()));
     connect(m_ui->messageEdit, SIGNAL(returnPressed()), this, SLOT(onSendButtonClicked()));
+    connect(m_ui->logIntervalComboBox, SIGNAL(activated(QString const&)), this, SIGNAL(logIntervalChange(QString const&)));
 }
 
 // ---------------------------------------------------------------------------

@@ -17,6 +17,7 @@ class BasicDisplay : public QWidget
 
     signals:
         void sendMessage(QString const&);
+        void logIntervalChange(QString const&);
 
     public slots:
         void onSendButtonClicked();

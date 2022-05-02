@@ -7,6 +7,7 @@
 #include <stdio.h> // snprintf()
 
 
+// ---------------------------------------------------------------------------
 TrackLogger::TrackLogger(QObject* parent)
     : QObject(parent)
     , m_filename("track.log")
@@ -16,15 +17,15 @@ TrackLogger::TrackLogger(QObject* parent)
     , m_interval(0)
     , m_enable(0)
 {
-    m_interval = 5; // menu item? cmd line param?
+    m_interval = 5;
 }
 
-
+// ---------------------------------------------------------------------------
 TrackLogger::~TrackLogger()
 {
 }
 
-
+// ---------------------------------------------------------------------------
 void TrackLogger::start()
 {
     // create a new file name
@@ -33,20 +34,28 @@ void TrackLogger::start()
     m_enable = 1;
 }
 
-
+// ---------------------------------------------------------------------------
 void TrackLogger::stop()
 {
     m_enable = 0;
 }
 
+// ---------------------------------------------------------------------------
+void TrackLogger::onLogIntervalChange(QString const& str)
+{
+    bool isConversionSuccess;
+    int interval = str.toInt(&isConversionSuccess);
+    if (isConversionSuccess) m_interval = interval;
+}
 
+// ---------------------------------------------------------------------------
 void TrackLogger::onGGA(int hours, int minutes, int seconds, double lat, double lon, int fixquality, int sats, double hdop, double altitude, double geoid)
 {
     m_activeSats = sats;
     m_altitude = altitude;
 }
 
-
+// ---------------------------------------------------------------------------
 void TrackLogger::onRMC(int hours, int minutes, int seconds, int fixstatus, double lat, double lon, int day, int month, int year, int fixmode)
 {
     char buf[128];
