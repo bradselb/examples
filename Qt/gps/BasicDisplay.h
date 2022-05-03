@@ -50,7 +50,7 @@ class BasicDisplay : public QWidget
 
     private: // data
         Ui::BasicDisplay* m_ui;
-        QElapsedTimer* m_elapsedtime; // time to first fix
+        QElapsedTimer* m_elapsedtime;
         QDateTime* m_datetime;
         double m_latitude;
         double m_longitude;

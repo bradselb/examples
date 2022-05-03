@@ -3,8 +3,9 @@
 #include "MessageDecoder.h"
 #include "GpsReceiver.h"
 #include "Logger.h"
+#include "SerialPortSelect.h"
 
-#include <QSerialPort>
+//#include <QSerialPort>
 #include <QMenu>
 #include <QMenuBar>
 #include <QToolBar>
@@ -13,67 +14,72 @@
 
 MainWindow::MainWindow()
 {
-    m_display = new BasicDisplay();
-    this->setCentralWidget(m_display);
+    BasicDisplay* display = new BasicDisplay();
+    this->setCentralWidget(display);
     this->setMinimumSize(400,220);
-    this->setMaximumSize(400,640);
+    this->setMaximumSize(400,600);
 
     createToolBars();
-    statusBar()->showMessage("Ready");
 
-    connect(siUnitsAct, SIGNAL(triggered()), m_display, SLOT(siUnits()));
-    connect(usUnitsAct, SIGNAL(triggered()), m_display, SLOT(usUnits()));
+    connect(siUnitsAct, SIGNAL(triggered()), display, SLOT(siUnits()));
+    connect(usUnitsAct, SIGNAL(triggered()), display, SLOT(usUnits()));
 
-    MessageDecoder* m_decoder = new MessageDecoder(this);
+    MessageDecoder* decoder = new MessageDecoder(this);
 
-    QObject::connect(m_decoder, SIGNAL(date(QDate const&)), m_display, SLOT(onDate(QDate const&)));
-    QObject::connect(m_decoder, SIGNAL(time(QTime const&)), m_display, SLOT(onTime(QTime const&)));
+    connect(decoder, SIGNAL(date(QDate const&)), display, SLOT(onDate(QDate const&)));
+    connect(decoder, SIGNAL(time(QTime const&)), display, SLOT(onTime(QTime const&)));
 
-    QObject::connect(m_decoder, SIGNAL(latitude(double)), m_display, SLOT(onLatitude(double)));
-    QObject::connect(m_decoder, SIGNAL(longitude(double)), m_display, SLOT(onLongitude(double)));
-    QObject::connect(m_decoder, SIGNAL(altitude(double)), m_display, SLOT(onAltitude(double)));
+    connect(decoder, SIGNAL(latitude(double)), display, SLOT(onLatitude(double)));
+    connect(decoder, SIGNAL(longitude(double)), display, SLOT(onLongitude(double)));
+    connect(decoder, SIGNAL(altitude(double)), display, SLOT(onAltitude(double)));
 
-    QObject::connect(m_decoder, SIGNAL(fixQuality(int)), m_display, SLOT(onFixQuality(int)));
-    QObject::connect(m_decoder, SIGNAL(fixStatus(QChar const&)), m_display, SLOT(onFixStatus(QChar const&)));
-    QObject::connect(m_decoder, SIGNAL(fixMode(QChar const&)), m_display, SLOT(onFixMode(QChar const&)));
+    connect(decoder, SIGNAL(fixQuality(int)), display, SLOT(onFixQuality(int)));
+    connect(decoder, SIGNAL(fixStatus(QChar const&)), display, SLOT(onFixStatus(QChar const&)));
+    connect(decoder, SIGNAL(fixMode(QChar const&)), display, SLOT(onFixMode(QChar const&)));
 
-    QObject::connect(m_decoder, SIGNAL(pdop(double)), m_display, SLOT(onPdop(double)));
-    QObject::connect(m_decoder, SIGNAL(hdop(double)), m_display, SLOT(onHdop(double)));
-    QObject::connect(m_decoder, SIGNAL(vdop(double)), m_display, SLOT(onVdop(double)));
+    connect(decoder, SIGNAL(pdop(double)), display, SLOT(onPdop(double)));
+    connect(decoder, SIGNAL(hdop(double)), display, SLOT(onHdop(double)));
+    connect(decoder, SIGNAL(vdop(double)), display, SLOT(onVdop(double)));
 
-    QObject::connect(m_decoder, SIGNAL(satsInUse(int)), m_display, SLOT(onSatsInUse(int)));
-    QObject::connect(m_decoder, SIGNAL(gloSatsInView(int)), m_display, SLOT(onGloSatsInView(int)));
-    QObject::connect(m_decoder, SIGNAL(gpsSatsInView(int)), m_display, SLOT(onGpsSatsInView(int)));
+    connect(decoder, SIGNAL(satsInUse(int)), display, SLOT(onSatsInUse(int)));
+    connect(decoder, SIGNAL(gloSatsInView(int)), display, SLOT(onGloSatsInView(int)));
+    connect(decoder, SIGNAL(gpsSatsInView(int)), display, SLOT(onGpsSatsInView(int)));
 
-    QObject::connect(m_decoder, SIGNAL(directionOfTravel(double)), m_display, SLOT(onDirectionOfTravel(double)));
-    QObject::connect(m_decoder, SIGNAL(speedOfTravelKmPerHr(double)), m_display, SLOT(onSpeedOfTravelKmPerHr(double)));
+    connect(decoder, SIGNAL(directionOfTravel(double)), display, SLOT(onDirectionOfTravel(double)));
+    connect(decoder, SIGNAL(speedOfTravelKmPerHr(double)), display, SLOT(onSpeedOfTravelKmPerHr(double)));
 
-    QObject::connect(m_decoder, SIGNAL(proprietaryMessageReceived(QString const&)), m_display, SLOT(onProprietaryMessageReceived(QString const&)));
-    //QObject::connect(m_decoder, SIGNAL(), m_display, SLOT());
+    connect(decoder, SIGNAL(proprietaryMessageReceived(QString const&)), display, SLOT(onProprietaryMessageReceived(QString const&)));
+    //connect(decoder, SIGNAL(), display, SLOT());
 
-
-    QSerialPort* m_serialport = new QSerialPort("/dev/ttyUSB0");
-    m_serialport->setBaudRate(QSerialPort::Baud9600);
-    m_serialport->setDataBits(QSerialPort::Data8);
-    m_serialport->setParity(QSerialPort::NoParity);
-    m_serialport->setStopBits(QSerialPort::OneStop);
-
-    GpsReceiver* gps = new GpsReceiver(m_serialport, this);
-    QObject::connect(gps, SIGNAL(nmeaSentence(QString const&)), m_decoder, SLOT(decodeNmeaSentence(QString const&)));
-    QObject::connect(m_display, SIGNAL(sendMessage(QString const&)), gps, SLOT(sendMessage(QString const&)));
+    GpsReceiver* gps = new GpsReceiver(this);
+    connect(gps, SIGNAL(nmeaSentence(QString const&)), decoder, SLOT(decodeNmeaSentence(QString const&)));
+    connect(display, SIGNAL(sendMessage(QString const&)), gps, SLOT(sendMessage(QString const&)));
 
     TrackLogger* logger = new TrackLogger(this);
 
-    QObject::connect(m_decoder, SIGNAL(GGA(int,int,int,double,double,int,int,double,double,double)),
-                     logger,    SLOT(onGGA(int,int,int,double,double,int,int,double,double,double)));
+    connect(decoder, SIGNAL(GGA(int,int,int,double,double,int,int,double,double,double)),
+            logger,    SLOT(onGGA(int,int,int,double,double,int,int,double,double,double)));
 
-    QObject::connect(m_decoder, SIGNAL(RMC(int,int,int,int,double,double,int,int,int,int)),
-                     logger,    SLOT(onRMC(int,int,int,int,double,double,int,int,int,int)));
+    connect(decoder, SIGNAL(RMC(int,int,int,int,double,double,int,int,int,int)),
+            logger,    SLOT(onRMC(int,int,int,int,double,double,int,int,int,int)));
 
     connect(startAct, SIGNAL(triggered()), logger, SLOT(start()));
     connect(stopAct, SIGNAL(triggered()), logger, SLOT(stop()));
-    connect(m_display, SIGNAL(logIntervalChange(QString const&)), logger, SLOT(onLogIntervalChange(QString const&)));
+    connect(display, SIGNAL(logIntervalChange(QString const&)), logger, SLOT(onLogIntervalChange(QString const&)));
+
+
+    SerialPortSelect* portselect = new SerialPortSelect(display);
+    connect(portselect, SIGNAL(serialPortSelected(QSerialPortInfo const&)), gps, SLOT(onSerialPortSelected(QSerialPortInfo const&)));
+    portselect->show();
+
+    statusBar()->showMessage("Ready");
 };
+
+
+// ---------------------------------------------------------------------------
+MainWindow::~MainWindow()
+{
+}
 
 // ---------------------------------------------------------------------------
 void MainWindow::setStatus(QString const& message)

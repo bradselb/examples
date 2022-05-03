@@ -4,6 +4,7 @@
 #include <QObject>
 
 class QIODevice;
+class QSerialPortInfo;
 
 // ---------------------------------------------------------------------------
 // a class to represent the GNSS receiver
@@ -16,7 +17,7 @@ class GpsReceiver : public QObject
     Q_OBJECT
 
     public:
-        GpsReceiver(QIODevice* iodevice, QObject* parent=0);
+        GpsReceiver(QObject* parent=0);
         ~GpsReceiver();
 
     signals:
@@ -24,6 +25,7 @@ class GpsReceiver : public QObject
 
     public slots:
         void sendMessage(QString const&);
+        void onSerialPortSelected(QSerialPortInfo const&);
 
     private slots:
         void onReadyRead();

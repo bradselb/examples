@@ -4,6 +4,8 @@
 #include <QIODevice>
 #include <QByteArray>
 #include <QString>
+#include <QSerialPortInfo>
+#include <QSerialPort>
 
 #include <stdlib.h> // memset()
 #include <stdio.h> // sprintf()
@@ -15,17 +17,9 @@ static unsigned int calculateChecksum(QByteArray const& message);
 static int verifyChecksum(QByteArray);
 
 
-
 // ---------------------------------------------------------------------------
-GpsReceiver::GpsReceiver(QIODevice* iodevice, QObject* parent) : QObject(parent), m_iodevice(iodevice)
+GpsReceiver::GpsReceiver(QObject* parent) : QObject(parent), m_iodevice(0)
 {
-    bool isSuccess = m_iodevice->open(QIODevice::ReadWrite);
-    if (!isSuccess) {
-        //qDebug() << "iodevice open() error code: " << m_iodevice->errorString();
-        throw(m_iodevice->errorString());
-    }
-
-    connect(m_iodevice, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
 
@@ -55,12 +49,32 @@ void GpsReceiver::sendMessage(QString const& str)
     sentence.append(suffix);
 
     // and write the sentence
-    //qDebug() << sentence;
     int bytes_written = m_iodevice->write(sentence);
-
     if (bytes_written != sentence.length()) {
         //qDebug() << "bytes written not equal to sentence length.";
     }
+}
+
+
+// ---------------------------------------------------------------------------
+void GpsReceiver::onSerialPortSelected(QSerialPortInfo const& portinfo)
+{
+    QSerialPort* serialport = new QSerialPort(portinfo);
+
+    serialport->setBaudRate(QSerialPort::Baud9600);
+    serialport->setDataBits(QSerialPort::Data8);
+    serialport->setParity(QSerialPort::NoParity);
+    serialport->setStopBits(QSerialPort::OneStop);
+
+    m_iodevice = serialport;
+
+    bool isSuccess = m_iodevice->open(QIODevice::ReadWrite);
+    if (!isSuccess) {
+        //qDebug() << "iodevice open() error code: " << m_iodevice->errorString();
+        throw(m_iodevice->errorString());
+    }
+
+    connect(m_iodevice, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
 

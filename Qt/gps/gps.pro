@@ -9,6 +9,6 @@ QT += widgets
 QT += serialport
 
 # Input
-FORMS += BasicDisplay.ui
-HEADERS += MainWindow.h GpsReceiver.h MessageDecoder.h BasicDisplay.h Logger.h
-SOURCES += MainWindow.cpp GpsReceiver.cpp MessageDecoder.cpp BasicDisplay.cpp Logger.cpp main.cpp
+FORMS += BasicDisplay.ui SerialPortSelect.ui
+HEADERS += MainWindow.h GpsReceiver.h MessageDecoder.h BasicDisplay.h SerialPortSelect.h Logger.h
+SOURCES += MainWindow.cpp GpsReceiver.cpp MessageDecoder.cpp BasicDisplay.cpp SerialPortSelect.cpp Logger.cpp main.cpp

@@ -24,7 +24,7 @@ class CentralWidget : public QWidget
     public slots:
         void onRefresh();
         void onComboBoxActivated(int idx);
-        void onOk();
+        void onPushButtonClicked();
 
     private: // functions
 

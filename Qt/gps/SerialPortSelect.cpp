@@ -1,6 +1,8 @@
-#include "CentralWidget.h"
-#include "ui_CentralWidget.h"
+#include "SerialPortSelect.h"
+#include "ui_SerialPortSelect.h"
 
+#include <QDialog>
+#include <QWidget>
 #include <QSerialPortInfo>
 #include <QSerialPort>
 #include <QString>
@@ -9,15 +11,13 @@
 #include <string.h> // memset(), snprintf()
 
 //----------------------------------------------------------------------------
-CentralWidget::CentralWidget(QWidget* parent)
-  : QWidget(parent)
+SerialPortSelect::SerialPortSelect(QWidget* parent)
+  : QDialog(parent)
   , m_ports()
   , m_selectedport()
 {
-    m_ui = new Ui::CentralWidget;
+    m_ui = new Ui::SerialPortSelect;
     m_ui->setupUi(this);
-
-    //this->onRefresh();
 
     m_ui->label_00->setText("port name"); m_ui->label_01->setText("");
     m_ui->label_10->setText("system location"); m_ui->label_11->setText("");
@@ -27,19 +27,23 @@ CentralWidget::CentralWidget(QWidget* parent)
     m_ui->label_50->setText("vender id"); m_ui->label_51->setText("");
     m_ui->label_60->setText("product id"); m_ui->label_61->setText("");
 
-    connect(m_ui->pushButton, SIGNAL(clicked()), this, SLOT(onRefresh()));
+    connect(m_ui->refreshButton, SIGNAL(clicked()), this, SLOT(onRefreshButtonClicked()));
+    connect(m_ui->okButton, SIGNAL(clicked()), this, SLOT(onOkButtonClicked()));
+    connect(m_ui->cancelButton, SIGNAL(clicked()), this, SLOT(onCancelButtonClicked()));
     connect(m_ui->comboBox, SIGNAL(activated(int)), this, SLOT(onComboBoxActivated(int)));
+
+    this->onRefreshButtonClicked();
 }
 
 //----------------------------------------------------------------------------
-CentralWidget::~CentralWidget()
+SerialPortSelect::~SerialPortSelect()
 {
 }
 
 
 //----------------------------------------------------------------------------
 // (re)populate the combo box
-void CentralWidget::onRefresh()
+void SerialPortSelect::onRefreshButtonClicked()
 {
     m_ui->comboBox->clear();
     m_ports.clear();
@@ -56,9 +60,21 @@ void CentralWidget::onRefresh()
     if (m_ui->comboBox->count()>0) onComboBoxActivated(0);
 }
 
+//----------------------------------------------------------------------------
+void SerialPortSelect::onOkButtonClicked()
+{
+    emit serialPortSelected(m_selectedport);
+    this->close();
+}
 
 //----------------------------------------------------------------------------
-void CentralWidget::onComboBoxActivated(int idx)
+void SerialPortSelect::onCancelButtonClicked()
+{
+    this->close();
+}
+
+//----------------------------------------------------------------------------
+void SerialPortSelect::onComboBoxActivated(int idx)
 {
     m_selectedport = m_ports.at(idx);
 
@@ -88,10 +104,5 @@ void CentralWidget::onComboBoxActivated(int idx)
     } else {
         m_ui->label_61->setText("");
     }
-}
-
-//----------------------------------------------------------------------------
-void CentralWidget::onPushButtonClicked()
-{
 }
 

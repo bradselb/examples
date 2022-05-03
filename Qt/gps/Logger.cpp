@@ -30,7 +30,7 @@ void TrackLogger::start()
 {
     // create a new file name
     QString timestamp(QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.sst"));
-    m_filename = QString("gps_%1\.log").arg(timestamp);
+    m_filename = QString("gps_%1.log").arg(timestamp);
     m_enable = 1;
 }
 
