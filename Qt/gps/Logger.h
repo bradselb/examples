@@ -15,10 +15,8 @@ class TrackLogger : public QObject
         ~TrackLogger();
 
     public slots:
-        void start();
-        void stop();
+        void onEnable(int);
         void onLogIntervalChange(QString const&);
-
         void onGGA(int hours, int minutes, int seconds, double lat, double lon, int fixquality, int sats, double hdop, double altitude, double geoid);
         void onRMC(int hours, int minutes, int seconds, int fixstatus, double lat, double lon, int day, int month, int year, int fixmode);
 

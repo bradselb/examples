@@ -18,6 +18,7 @@ class BasicDisplay : public QWidget
     signals:
         void sendMessage(QString const&);
         void logIntervalChange(QString const&);
+        void enableLogger(int);
 
     public slots:
         void onSendButtonClicked();
@@ -42,8 +43,7 @@ class BasicDisplay : public QWidget
         void onDirectionOfTravel(double);
         void onSpeedOfTravelKmPerHr(double);
 
-        void siUnits();
-        void usUnits();
+        void onUnitsRadioButtonToggled(bool);
 
     private: // functions
         void setDateTime();

@@ -1,35 +1,27 @@
-#if !defined MAINWINDOW_H
-#define MAINWINDOW_H
+#if !defined BKS_MAINWINDOW_H
+#define BKS_MAINWINDOW_H
 
+#include <QWidget>
 #include <QMainWindow>
 
-class QAction;
-class QMenu;
+namespace Ui {class MainWindow;}
+
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     public:
-        MainWindow();
+        MainWindow(QWidget* parent=0);
         ~MainWindow();
 
     public slots:
         void setStatus(QString const&);
 
-    private: // member functions
-        void createToolBars();
+    private:
+        Ui::MainWindow* m_ui;
 
-    private: // widgets
-        QToolBar* loggingToolBar;
-        QAction* startAct;
-        QAction* stopAct;
-
-        QToolBar* unitsToolBar;
-        QAction* siUnitsAct;
-        QAction* usUnitsAct;
 };
-
 
 #endif //!defined MAINWINDOW_H
 

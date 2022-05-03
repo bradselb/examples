@@ -1,28 +1,22 @@
 #include "MainWindow.h"
+#include "ui_MainWindow.h"
+
 #include "BasicDisplay.h"
 #include "MessageDecoder.h"
 #include "GpsReceiver.h"
 #include "Logger.h"
 #include "SerialPortSelect.h"
 
-//#include <QSerialPort>
-#include <QMenu>
-#include <QMenuBar>
-#include <QToolBar>
-#include <QStatusBar>
+#include <QMainWindow>
+#include <QWidget>
 
-
-MainWindow::MainWindow()
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
     BasicDisplay* display = new BasicDisplay();
     this->setCentralWidget(display);
-    this->setMinimumSize(400,220);
-    this->setMaximumSize(400,600);
 
-    createToolBars();
-
-    connect(siUnitsAct, SIGNAL(triggered()), display, SLOT(siUnits()));
-    connect(usUnitsAct, SIGNAL(triggered()), display, SLOT(usUnits()));
+    //connect(siUnitsAct, SIGNAL(triggered()), display, SLOT(siUnits()));
+    //connect(usUnitsAct, SIGNAL(triggered()), display, SLOT(usUnits()));
 
     MessageDecoder* decoder = new MessageDecoder(this);
 
@@ -63,13 +57,13 @@ MainWindow::MainWindow()
     connect(decoder, SIGNAL(RMC(int,int,int,int,double,double,int,int,int,int)),
             logger,    SLOT(onRMC(int,int,int,int,double,double,int,int,int,int)));
 
-    connect(startAct, SIGNAL(triggered()), logger, SLOT(start()));
-    connect(stopAct, SIGNAL(triggered()), logger, SLOT(stop()));
     connect(display, SIGNAL(logIntervalChange(QString const&)), logger, SLOT(onLogIntervalChange(QString const&)));
+    connect(display, SIGNAL(enableLogger(int)), logger, SLOT(onEnable(int)));
 
 
     SerialPortSelect* portselect = new SerialPortSelect(display);
     connect(portselect, SIGNAL(serialPortSelected(QSerialPortInfo const&)), gps, SLOT(onSerialPortSelected(QSerialPortInfo const&)));
+    portselect->setParent(display);
     portselect->show();
 
     statusBar()->showMessage("Ready");
@@ -85,29 +79,5 @@ MainWindow::~MainWindow()
 void MainWindow::setStatus(QString const& message)
 {
     statusBar()->showMessage(message);
-}
-
-// ---------------------------------------------------------------------------
-void MainWindow::createToolBars()
-{
-    loggingToolBar = addToolBar("Logging");
-
-    startAct = new QAction("Start", this);
-    startAct->setStatusTip("Start Logging");
-    loggingToolBar->addAction(startAct);
-
-    stopAct = new QAction("Stop", this);
-    stopAct->setStatusTip("Stop Logging");
-    loggingToolBar->addAction(stopAct);
-
-    unitsToolBar = addToolBar("Units");
-
-    siUnitsAct = new QAction("meters", this);
-    siUnitsAct->setStatusTip("Display Meters and Km/Hr");;
-    unitsToolBar->addAction(siUnitsAct);
-
-    usUnitsAct = new QAction("feet", this);
-    usUnitsAct->setStatusTip("Display Feet and MPH");;
-    unitsToolBar->addAction(usUnitsAct);
 }
 

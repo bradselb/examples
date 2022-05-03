@@ -26,18 +26,16 @@ TrackLogger::~TrackLogger()
 }
 
 // ---------------------------------------------------------------------------
-void TrackLogger::start()
+void TrackLogger::onEnable(int enable)
 {
-    // create a new file name
-    QString timestamp(QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.sst"));
-    m_filename = QString("gps_%1.log").arg(timestamp);
-    m_enable = 1;
-}
-
-// ---------------------------------------------------------------------------
-void TrackLogger::stop()
-{
-    m_enable = 0;
+    if (enable) {
+        // create a new file name
+        QString timestamp(QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.sst"));
+        m_filename = QString("gps_%1.log").arg(timestamp);
+        m_enable = 1;
+    } else {
+        m_enable = 0;
+    }
 }
 
 // ---------------------------------------------------------------------------

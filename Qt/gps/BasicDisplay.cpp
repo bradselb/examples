@@ -35,6 +35,9 @@ BasicDisplay::BasicDisplay(QWidget* parent)
 
     connect(m_ui->messageEdit, SIGNAL(returnPressed()), this, SLOT(onSendButtonClicked()));
     connect(m_ui->logIntervalComboBox, SIGNAL(activated(QString const&)), this, SIGNAL(logIntervalChange(QString const&)));
+    connect(m_ui->loggingEnabledCheckBox, SIGNAL(stateChanged(int)), this, SIGNAL(enableLogger(int)));
+    connect(m_ui->usUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
+    connect(m_ui->siUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
 }
 
 // ---------------------------------------------------------------------------
@@ -211,15 +214,13 @@ void BasicDisplay::onSpeedOfTravelKmPerHr(double speed)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::siUnits()
+void BasicDisplay::onUnitsRadioButtonToggled(bool)
 {
-    m_units = SI_UNITS;;
-}
-
-// ---------------------------------------------------------------------------
-void BasicDisplay::usUnits()
-{
-    m_units = US_UNITS;;
+    if (m_ui->usUnitsButton->isChecked()) {
+        m_units = US_UNITS;
+    } else {
+        m_units = SI_UNITS;;
+    }
 }
 
 // ---------------------------------------------------------------------------
