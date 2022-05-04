@@ -14,9 +14,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
     BasicDisplay* display = new BasicDisplay();
     this->setCentralWidget(display);
-
-    //connect(siUnitsAct, SIGNAL(triggered()), display, SLOT(siUnits()));
-    //connect(usUnitsAct, SIGNAL(triggered()), display, SLOT(usUnits()));
+    this->setMaximumSize(640,768);
 
     MessageDecoder* decoder = new MessageDecoder(this);
 
