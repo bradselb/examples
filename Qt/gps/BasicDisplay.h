@@ -21,6 +21,7 @@ class BasicDisplay : public QWidget
         void enableLogger(int);
 
     public slots:
+        void onShowOnMapButtonClicked();
         void onSendButtonClicked();
         void onProprietaryMessageReceived(QString const&);
 

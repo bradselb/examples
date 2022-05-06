@@ -7,6 +7,8 @@
 #include <QDate>
 #include <QTime>
 #include <QTimeZone>
+#include <QDesktopServices>
+#include <QUrl>
 
 //#include <QDebug>
 
@@ -38,6 +40,7 @@ BasicDisplay::BasicDisplay(QWidget* parent)
     connect(m_ui->loggingEnabledCheckBox, SIGNAL(stateChanged(int)), this, SIGNAL(enableLogger(int)));
     connect(m_ui->usUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
     connect(m_ui->siUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
+    connect(m_ui->showOnMapButton, SIGNAL(clicked(bool)), this, SLOT(onShowOnMapButtonClicked()));
 }
 
 // ---------------------------------------------------------------------------
@@ -46,6 +49,17 @@ BasicDisplay::~BasicDisplay()
     delete m_datetime;
     delete m_elapsedtime;
     delete m_ui;
+}
+
+// ---------------------------------------------------------------------------
+void BasicDisplay::onShowOnMapButtonClicked()
+{
+    bool isSuccess;
+    QString url = QString("http://www.google.com/maps/place/%1,%2").arg(m_latitude,0,'f',6).arg(m_longitude,0,'f',6);
+    isSuccess = QDesktopServices::openUrl(QUrl(url));
+    if (!isSuccess) {
+        ; // emit a signal containing an error message.
+    }
 }
 
 // ---------------------------------------------------------------------------

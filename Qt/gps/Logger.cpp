@@ -47,7 +47,8 @@ void TrackLogger::onLogIntervalChange(QString const& str)
 }
 
 // ---------------------------------------------------------------------------
-void TrackLogger::onGGA(int hours, int minutes, int seconds, double lat, double lon, int fixquality, int sats, double hdop, double altitude, double geoid)
+void TrackLogger::onGGA(int, int, int, double, double, int, int sats, double, double altitude, double)
+//void TrackLogger::onGGA(int hours, int minutes, int seconds, double lat, double lon, int fixquality, int sats, double hdop, double altitude, double geoid)
 {
     m_activeSats = sats;
     m_altitude = altitude;

@@ -38,7 +38,7 @@
    <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
-   <string>Brad's MainWindow</string>
+   <string>Brad's GPS Data Logger</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextOnly</enum>
