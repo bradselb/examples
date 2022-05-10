@@ -46,6 +46,9 @@ class BasicDisplay : public QWidget
 
         void onUnitsRadioButtonToggled(bool);
 
+    private slots:
+        void onLogEnableCheckBoxStateChange(int);
+
     private: // functions
         void setDateTime();
 

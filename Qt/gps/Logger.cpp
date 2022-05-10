@@ -17,7 +17,6 @@ TrackLogger::TrackLogger(QObject* parent)
     , m_interval(0)
     , m_enable(0)
 {
-    m_interval = 5;
 }
 
 // ---------------------------------------------------------------------------
@@ -72,7 +71,7 @@ void TrackLogger::onRMC(int hours, int minutes, int seconds, int fixstatus, doub
 
     now = mktime(&t);
 
-    if (now != (time_t)-1 && m_enable)
+    if (now != (time_t)-1 && m_enable && m_interval>0)
     {
         if ((difftime(now, m_prev) >= m_interval) && (seconds % m_interval == 0) && (fixstatus == 'A'))
         {
