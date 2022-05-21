@@ -22,9 +22,10 @@ class TrackLogger : public QObject
 
     private: // data
         QString m_filename;
-        double m_altitude; // saved from previous GGA message
+        double m_altitude; // from GGA
+        double m_hdop; // from GGA
         time_t m_prev;
-        int m_activeSats; // also from GGA
+        int m_activeSats; // from GGA
         int m_interval;
         int m_enable;
 
