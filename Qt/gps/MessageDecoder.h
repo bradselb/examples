@@ -3,7 +3,9 @@
 
 #include <QObject>
 
+
 class QIODevice;
+struct GSV;
 
 // ---------------------------------------------------------------------------
 // Decode select NMEA 0183 sentences.
@@ -41,6 +43,9 @@ class MessageDecoder : public QObject
         //void RMC(int hours, int minutes, int seconds, int fixstatus, double lat, double lon, int day, int month, int year, int fixmode);
         void RMC(int,int,int,int,double,double,int,int,int,int);
 
+        void GpgsvReady(struct GSV const&);
+        void GlgsvReady(struct GSV const&);
+
 
     public slots:
         void decodeNmeaSentence(QString const&);
@@ -48,6 +53,7 @@ class MessageDecoder : public QObject
     private: // functions
         int decodeGGA(QStringList const& tokens);
         int decodeGSA(QStringList const& tokens);
+        int decodeGSV(QStringList const& tokens);
         int decodeRMC(QStringList const& tokens);
         int decodeVTG(QStringList const& tokens);
 

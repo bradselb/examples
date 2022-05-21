@@ -1,11 +1,10 @@
 #include "MessageDecoder.h"
+#include "Message.h"
 
 #include <QObject>
 #include <QString>
 #include <QTime>
 #include <QDate>
-
-//#include <QDebug>
 
 
 // ---------------------------------------------------------------------------
@@ -39,25 +38,25 @@ void MessageDecoder::decodeNmeaSentence(QString const& sentence)
     // split the message into a list of tokens. Keep the empty fields
     QStringList tokens = message.split(',');
 
-    if (tokens[0].mid(2,3) == QString("GGA")) {
+    if (tokens[0].contains("GGA")) {
         decodeGGA(tokens);
 
-    } else if (tokens[0].mid(2,3) == QString("GSA")) {
+    } else if (tokens[0].contains("GSA")) {
         decodeGSA(tokens);
 
-    } else if (tokens[0].mid(2,3) == QString("RMC")) {
+    } else if (tokens[0].contains("RMC")) {
         decodeRMC(tokens);
 
-    } else if (tokens[0].mid(2,3) == QString("VTG")) {
+    } else if (tokens[0].contains("VTG")) {
         decodeVTG(tokens);
 
-    } else if (tokens[0] == QString("GPGSV")) {
+    } else if (tokens[0].contains("GPGSV")) {
         emit gpsSatsInView(tokens[3].toInt());
 
-    } else if (tokens[0] == QString("GLGSV")) {
+    } else if (tokens[0].contains("GLGSV")) {
         emit gloSatsInView(tokens[3].toInt());
 
-    } else if (tokens[0].left(4) == QString("PMTK")) {
+    } else if (tokens[0].contains("PMTK")) {
         // a proprietary MTK sentence.
         emit proprietaryMessageReceived(message);
     }
@@ -111,13 +110,57 @@ int MessageDecoder::decodeGGA(QStringList const& tokens)
 // ---------------------------------------------------------------------------
 int MessageDecoder::decodeGSA(QStringList const& tokens)
 {
-    emit fixType(tokens[2].toInt());
+    //char fixAutoManual = tokens[1].at(0).toLatin1();
+
+    int activeSats[12];
+    for (int i=0; i<12; ++i) {
+        activeSats[i] = tokens[i+3].toInt();
+    }
+
+    emit fixType(tokens[2].toInt()); // 1--> no fix, 2--> 2d fix, 3-->3d fix
     emit pdop(tokens[15].toDouble());
     emit hdop(tokens[16].toDouble());
     emit vdop(tokens[17].toDouble());
     return 0;
 }
 
+
+// ---------------------------------------------------------------------------
+int MessageDecoder::decodeGSV(QStringList const& tokens)
+{
+    static struct GSV gsv;
+    int msg_nr, msg_count;
+    int how_many_sv_info_this_msg;
+
+    msg_count = tokens[1].toInt();
+    msg_nr = tokens[2].toInt();
+    how_many_sv_info_this_msg = tokens.count() - 4; // four tokens before list of descriptor blocks
+
+    if (msg_nr == 1) {
+        gsv.descriptors.clear();
+        memset(&gsv, 0, sizeof(struct GSV));
+    }
+
+    gsv.in_view_count = tokens[3].toInt();
+
+    for (int i=0; i<how_many_sv_info_this_msg; ++i) {
+        struct SatInfo desc;
+        desc.prn = tokens[4*i + 4].toInt();
+        desc.elev = tokens[4*i + 5].toInt();
+        desc.azim = tokens[4*i + 6].toInt();
+        desc.snr = tokens[4*i + 7].toInt();
+        gsv.descriptors.append(desc);
+    }
+
+    if (msg_nr == msg_count) {
+        if (tokens[0].contains("GPGSV")) {
+            emit GpgsvReady(gsv);
+        } else if (tokens[0].contains("GLGSV")) {
+            emit GlgsvReady(gsv);
+        }
+    }
+    return 0;
+}
 
 // ---------------------------------------------------------------------------
 int MessageDecoder::decodeRMC(QStringList const& tokens)
