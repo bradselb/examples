@@ -96,7 +96,6 @@ void GpsReceiver::onReadyRead()
             } else if (!verifyChecksum(receivedLine)) {
                 //qDebug() << "recieved a line of garbage.";
             } else {
-
                 emit nmeaSentence(QString(buf));
             }
         }

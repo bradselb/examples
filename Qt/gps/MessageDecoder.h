@@ -3,10 +3,6 @@
 
 #include <QObject>
 
-
-class QIODevice;
-struct GSV;
-
 // ---------------------------------------------------------------------------
 // Decode select NMEA 0183 sentences.
 class MessageDecoder : public QObject
@@ -24,6 +20,8 @@ class MessageDecoder : public QObject
         void longitude(double); // RMC
         void altitude(double); // GGA
         void satsInUse(int); // GGA
+        void activeSatCount(int); // GSA
+        void activeSatPRN(int); // GSA
         void gloSatsInView(int); // GNGSV
         void gpsSatsInView(int); // GPGSV
         void fixQuality(int); // GGA
@@ -42,9 +40,6 @@ class MessageDecoder : public QObject
 
         //void RMC(int hours, int minutes, int seconds, int fixstatus, double lat, double lon, int day, int month, int year, int fixmode);
         void RMC(int,int,int,int,double,double,int,int,int,int);
-
-        void GpgsvReady(struct GSV const&);
-        void GlgsvReady(struct GSV const&);
 
 
     public slots:
