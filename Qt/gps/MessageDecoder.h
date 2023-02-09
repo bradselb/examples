@@ -24,6 +24,7 @@ class MessageDecoder : public QObject
         void activeSatPRN(int); // GSA
         void gloSatsInView(int); // GNGSV
         void gpsSatsInView(int); // GPGSV
+        void satInView(int prn, int azim, int elev, int snr); // GSV
         void fixQuality(int); // GGA
         void fixStatus(QChar const&); // RMC
         void fixMode(QChar const&); // RMC

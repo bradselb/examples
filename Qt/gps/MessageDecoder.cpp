@@ -116,7 +116,7 @@ int MessageDecoder::decodeGSA(QStringList const& tokens)
 
         prn = tokens[i+3].toInt(&ok);
         if (ok) {
-            emit activeSatPRN(prn); 
+            emit activeSatPRN(prn);
             ++active_sat_count;
         }
     }
@@ -156,10 +156,10 @@ int MessageDecoder::decodeGSV(QStringList const& tokens)
         emit gloSatsInView(sats_in_view);
     }
 
-    // each GSV message contains info on up to four satellites. In fact, it appears that 
+    // each GSV message contains info on up to four satellites. In fact, it appears that
     // each GSV message has 4*4 satellite info fields even if they are blank.
     // this next bit is trying to figure out how many non-empty sets of satellite info
-    // are contained in this GSV message. It is a number between 1 and 4 inclusive. 
+    // are contained in this GSV message. It is a number between 1 and 4 inclusive.
     int msg_idx = msg_nr - 1;
     int sats_this_msg = 0;
     if (msg_idx < sats_in_view/4) {
@@ -169,8 +169,6 @@ int MessageDecoder::decodeGSV(QStringList const& tokens)
         sats_this_msg = sats_in_view % 4;
     }
 
-//qDebug() << "idx:" << msg_idx << "sats_this_msg:" << sats_this_msg;
-
     for (int i=0; i<sats_this_msg; ++i) {
         int prn;
         int elev;
@@ -178,17 +176,18 @@ int MessageDecoder::decodeGSV(QStringList const& tokens)
         int snr;
 
         val = tokens[4 + 4*i].toInt(&ok);
-        prn = (ok ? val : 0);
+        prn = (ok ? val : -1);
 
         val = tokens[5 + 4*i].toInt(&ok);
-        elev = (ok ? val : 0);
+        elev = (ok ? val : -1);
 
         val = tokens[6+ 4*i].toInt(&ok);
-        azim = (ok ? val : 0);
+        azim = (ok ? val : -1);
 
         val = tokens[7+ 4*i].toInt(&ok);
-        snr = (ok ? val : 0);
-//qDebug() << "prn:" << prn << "elev:" << elev << "azim:" << azim << "snr:" << snr;
+        snr = (ok ? val : -1);
+
+        emit satInView(prn, azim, elev, snr);
     }
 
     return 0;
