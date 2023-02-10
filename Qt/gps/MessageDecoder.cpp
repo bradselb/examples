@@ -91,6 +91,7 @@ int MessageDecoder::decodeGGA(QStringList const& tokens)
 
     // eighth token is horizontal dilution of precision, hdop
     double hdop = tokens[8].toDouble();
+    //emit hdop(hdop); // redundant hdop in GSA
 
     double antennaHeight = tokens[9].toDouble(); //above mean sea level, in meters.
     emit altitude(antennaHeight);
@@ -135,8 +136,6 @@ int MessageDecoder::decodeGSV(QStringList const& tokens)
 {
     int val;
     bool ok;
-
-//qDebug() << tokens;
 
     // first token is message count - how many GSV messages in this group?
     //val = tokens[1].toInt(&ok);

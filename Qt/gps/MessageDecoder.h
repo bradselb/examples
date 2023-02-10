@@ -30,7 +30,7 @@ class MessageDecoder : public QObject
         void fixMode(QChar const&); // RMC
         void fixType(int); // GSA
         void pdop(double); // GSA
-        void hdop(double); // GSA
+        void hdop(double); // GSA, GGA
         void vdop(double); // GSA
         void directionOfTravel(double); // VTG
         void speedOfTravelKmPerHr(double); // VTG
