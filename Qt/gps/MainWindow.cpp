@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     TrackLogger* logger = new TrackLogger(this);
 
+    connect(decoder, SIGNAL(date(QDate const&)), logger, SLOT(onDate(QDate const&)));
+    connect(decoder, SIGNAL(time(QTime const&)), logger, SLOT(onTime(QTime const&)));
+
     connect(decoder, SIGNAL(GGA(int,int,int,double,double,int,int,double,double,double)),
             logger,    SLOT(onGGA(int,int,int,double,double,int,int,double,double,double)));
 

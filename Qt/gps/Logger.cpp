@@ -1,6 +1,7 @@
 #include "Logger.h"
 
 #include <QDateTime>
+#include <QTimeZone>
 
 #include <time.h> // strftime(), struct tm
 #include <string.h> // memset()
@@ -10,6 +11,7 @@
 // ---------------------------------------------------------------------------
 TrackLogger::TrackLogger(QObject* parent)
     : QObject(parent)
+    , m_datetime(0)
     , m_filename("track.log")
     , m_altitude(0.0)
     , m_hdop(0.0)
@@ -18,11 +20,15 @@ TrackLogger::TrackLogger(QObject* parent)
     , m_interval(0)
     , m_enable(0)
 {
+    m_datetime = new QDateTime();
+    m_datetime->setTimeZone(QTimeZone(0)); // GPS time is always UTC
+    m_datetime->setDate(QDate(2000,0,0));
 }
 
 // ---------------------------------------------------------------------------
 TrackLogger::~TrackLogger()
 {
+    delete m_datetime;
 }
 
 // ---------------------------------------------------------------------------
@@ -30,7 +36,8 @@ void TrackLogger::onEnable(int enable)
 {
     if (enable) {
         // create a new file name
-        QString timestamp(QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.sst"));
+        QDateTime localtime(m_datetime->toLocalTime());
+        QString timestamp(localtime.toString("yyyy-MM-dd_hh.mm.sst"));
         m_filename = QString("gps_%1.log").arg(timestamp);
         m_enable = 1;
     } else {
@@ -44,6 +51,18 @@ void TrackLogger::onLogIntervalChange(QString const& str)
     bool isConversionSuccess;
     int interval = str.toInt(&isConversionSuccess);
     if (isConversionSuccess) m_interval = interval;
+}
+
+// ---------------------------------------------------------------------------
+void TrackLogger::onDate(QDate const& date)
+{
+    m_datetime->setDate(date);
+}
+
+// ---------------------------------------------------------------------------
+void TrackLogger::onTime(QTime const& t)
+{
+    m_datetime->setTime(t);
 }
 
 // ---------------------------------------------------------------------------

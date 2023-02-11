@@ -15,7 +15,7 @@ class MessageDecoder : public QObject
 
     signals:
         void date(QDate const&); // RMC
-        void time(QTime const&); // RMC
+        void time(QTime const&); // GGA, RMC
         void latitude(double); // RMC
         void longitude(double); // RMC
         void altitude(double); // GGA

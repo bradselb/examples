@@ -67,7 +67,7 @@ int MessageDecoder::decodeGGA(QStringList const& tokens)
     // first token is UTC, format is, hhmmss.sss
     int hours, minutes, seconds;
     decodeUTC(tokens[1], &hours, &minutes, &seconds);
-    //emit time(QTime(hours, minutes, seconds, 0));
+    emit time(QTime(hours, minutes, seconds, 0));
 
     // second token is latitude. format is, ddmm.mmmm
     // third token is 'N' or 'S'
