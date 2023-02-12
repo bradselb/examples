@@ -149,12 +149,17 @@ int MessageDecoder::decodeGSV(QStringList const& tokens)
     val = tokens[3].toInt(&ok);
     int sats_in_view = (ok ? val : 0);
 
-    if (tokens[0].contains("GP")) {
-        emit gpsSatsInView(sats_in_view);
-    } else if (tokens[0].contains("GL")) {
-        emit gloSatsInView(sats_in_view);
+    if (msg_nr == 1) {
+        if (tokens[0].contains("GP")) {
+            emit gpsSatsInView(sats_in_view);
+        } else if (tokens[0].contains("GL")) {
+            emit gloSatsInView(sats_in_view);
+        }
     }
 
+
+// this works but not used yet.
+#if 0
     // each GSV message contains info on up to four satellites. In fact, it appears that
     // each GSV message has 4*4 satellite info fields even if they are blank.
     // this next bit is trying to figure out how many non-empty sets of satellite info
@@ -188,7 +193,7 @@ int MessageDecoder::decodeGSV(QStringList const& tokens)
 
         emit satInView(prn, azim, elev, snr);
     }
-
+#endif
     return 0;
 }
 
