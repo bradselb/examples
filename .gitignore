@@ -27,3 +27,11 @@
 
 # tags
 tags
+
+# stash
+*.stash
+
+# Qt build products / generated source files
+moc_*.h
+moc_*.cpp
+ui_*.h
