@@ -9,6 +9,8 @@
 
 #include <QMainWindow>
 #include <QWidget>
+#include <QAction>
+#include <QToolBar>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -69,6 +71,23 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     connect(portselect, SIGNAL(serialPortSelected(QSerialPortInfo const&)), gps, SLOT(onSerialPortSelected(QSerialPortInfo const&)));
     portselect->setModal(true);
     portselect->show(); // **DO NOT** call exec() in a constructor!
+    portselect->move(600, 300); //swag/hack, seems to achieve desired effect.
+
+    // ----------------------------------------------------------------------
+    QToolBar* myToolBar = addToolBar(tr("tools"));
+    QAction* exitAct = new QAction(tr("E&xit"), this);
+    exitAct->setShortcuts(QKeySequence::Quit);
+    exitAct->setStatusTip(tr("Exit the application"));
+    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+    QAction* portAct = new QAction(tr("Port"), this);
+    portAct->setShortcuts(QKeySequence::Print);
+    portAct->setStatusTip(tr("Show the Serial Port Select Dialog"));
+    connect(portAct, SIGNAL(triggered()), portselect, SLOT(show()));
+
+    myToolBar->addAction(portAct);
+    myToolBar->addSeparator();
+    myToolBar->addAction(exitAct);
 
     statusBar()->showMessage("Ready");
 };
