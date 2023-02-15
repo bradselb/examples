@@ -1,3 +1,5 @@
+#include <mainwindow.h>
+
 #include <QtGui>
 #include <QAction>
 #include <QMenu>
@@ -8,7 +10,6 @@
 #include <QToolBar>
 #include <QStatusBar>
 
-#include <mainwindow.h>
 
 MainWindow::MainWindow()
 {
@@ -172,7 +173,7 @@ void MainWindow::createMenus()
     editMenu->addAction(copyAct);
     editMenu->addAction(pasteAct);
 
-    menuBar()->addSeparator();
+    //menuBar()->addSeparator();
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAct);
