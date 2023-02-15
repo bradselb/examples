@@ -70,9 +70,9 @@ void BasicDisplay::onSendButtonClicked()
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::onProprietaryMessageReceived(QString const& message)
+void BasicDisplay::onProprietaryMessage(QString const& message)
 {
-    m_ui->replyEdit->append(message);
+    m_ui->replyEdit->append(message.trimmed());
 }
 
 // ---------------------------------------------------------------------------

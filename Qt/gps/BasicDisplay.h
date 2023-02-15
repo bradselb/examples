@@ -23,7 +23,7 @@ class BasicDisplay : public QWidget
     public slots:
         void onShowOnMapButtonClicked();
         void onSendButtonClicked();
-        void onProprietaryMessageReceived(QString const&);
+        void onProprietaryMessage(QString const&);
 
         void onTime(QTime const&);
         void onDate(QDate const&);
