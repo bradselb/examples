@@ -38,6 +38,7 @@ SerialPortSelect::SerialPortSelect(QWidget* parent)
 //----------------------------------------------------------------------------
 SerialPortSelect::~SerialPortSelect()
 {
+    delete m_ui;
 }
 
 

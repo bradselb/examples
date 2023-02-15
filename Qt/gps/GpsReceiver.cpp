@@ -34,7 +34,7 @@ GpsReceiver::~GpsReceiver()
 
 
 // ---------------------------------------------------------------------------
-void GpsReceiver::sendMessage(QString const& str)
+void GpsReceiver::onSendMessage(QString const& str)
 {
     QByteArray msg = (((str.trimmed()).split('*'))[0]).toLocal8Bit();
     QByteArray sentence(msg);
@@ -53,6 +53,8 @@ void GpsReceiver::sendMessage(QString const& str)
     if (bytes_written != sentence.length()) {
         //qDebug() << "bytes written not equal to sentence length.";
     }
+
+    emit messageSent(sentence);
 }
 
 

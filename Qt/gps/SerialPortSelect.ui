@@ -3,7 +3,7 @@
  <class>SerialPortSelect</class>
  <widget class="QDialog" name="SerialPortSelect">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::ApplicationModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -277,6 +277,9 @@
    </property>
    <property name="text">
     <string>Ok</string>
+   </property>
+   <property name="default">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="cancelButton">

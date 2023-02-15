@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     this->setCentralWidget(display);
     this->setMaximumSize(640,768);
 
+    // ----------------------------------------------------------------------
     MessageDecoder* decoder = new MessageDecoder(this);
 
     connect(decoder, SIGNAL(date(QDate const&)), display, SLOT(onDate(QDate const&)));
@@ -40,15 +41,17 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     connect(decoder, SIGNAL(directionOfTravel(double)), display, SLOT(onDirectionOfTravel(double)));
     connect(decoder, SIGNAL(speedOfTravelKmPerHr(double)), display, SLOT(onSpeedOfTravelKmPerHr(double)));
 
-    connect(decoder, SIGNAL(proprietaryMessageReceived(QString const&)), display, SLOT(onProprietaryMessageReceived(QString const&)));
+    connect(decoder, SIGNAL(proprietaryMessageReceived(QString const&)), display, SLOT(onProprietaryMessage(QString const&)));
     //connect(decoder, SIGNAL(), display, SLOT());
 
+    // ----------------------------------------------------------------------
     GpsReceiver* gps = new GpsReceiver(this);
     connect(gps, SIGNAL(nmeaSentence(QString const&)), decoder, SLOT(decodeNmeaSentence(QString const&)));
-    connect(display, SIGNAL(sendMessage(QString const&)), gps, SLOT(sendMessage(QString const&)));
+    connect(display, SIGNAL(sendMessage(QString const&)), gps, SLOT(onSendMessage(QString const&)));
+    connect(gps, SIGNAL(messageSent(QString const&)), display, SLOT(onProprietaryMessage(QString const&)));
 
+    // ----------------------------------------------------------------------
     TrackLogger* logger = new TrackLogger(this);
-
     connect(decoder, SIGNAL(date(QDate const&)), logger, SLOT(onDate(QDate const&)));
     connect(decoder, SIGNAL(time(QTime const&)), logger, SLOT(onTime(QTime const&)));
 
@@ -61,11 +64,11 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     connect(display, SIGNAL(logIntervalChange(QString const&)), logger, SLOT(onLogIntervalChange(QString const&)));
     connect(display, SIGNAL(enableLogger(int)), logger, SLOT(onEnable(int)));
 
-
-    SerialPortSelect* portselect = new SerialPortSelect(display);
+    // ----------------------------------------------------------------------
+    SerialPortSelect* portselect = new SerialPortSelect(this);
     connect(portselect, SIGNAL(serialPortSelected(QSerialPortInfo const&)), gps, SLOT(onSerialPortSelected(QSerialPortInfo const&)));
-    portselect->setParent(display);
-    portselect->show();
+    portselect->setModal(true);
+    portselect->show(); // **DO NOT** call exec() in a constructor!
 
     statusBar()->showMessage("Ready");
 };
