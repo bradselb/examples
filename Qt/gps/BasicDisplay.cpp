@@ -7,6 +7,8 @@
 #include <QDate>
 #include <QTime>
 #include <QTimeZone>
+#include <QAction>
+#include <QKeySequence>
 #include <QDesktopServices>
 #include <QUrl>
 
@@ -41,6 +43,13 @@ BasicDisplay::BasicDisplay(QWidget* parent)
     connect(m_ui->usUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
     connect(m_ui->siUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
     connect(m_ui->showOnMapButton, SIGNAL(clicked(bool)), this, SLOT(onShowOnMapButtonClicked()));
+
+    // fix quality is redundant. GGA[6] --> RMC[12] : {0-->N, 1-->A, 2-->D}
+    // fixMode contains the same info and is more easily comprehended.
+    // just hide it for now.
+    m_ui->fixquality->hide();
+    m_ui->fixQualityLabel->hide();
+
 }
 
 // ---------------------------------------------------------------------------
@@ -117,14 +126,14 @@ void BasicDisplay::onAltitude(double alt)
 }
 
 // ---------------------------------------------------------------------------
-void BasicDisplay::onFixQuality(int k)
+void BasicDisplay::onFixQuality(int fixquality)
 {
-    if (m_fixquality != k) {
+    if (m_fixquality != fixquality) {
         //float elapsedtime = m_elapsedtime->elapsed()/1000.0;
-        //qDebug() << "Fix quality transitioned from" << m_fixquality << "to" << k << "at" << elapsedtime << "seconds";
-        m_fixquality = k;
+        //qDebug() << "Fix quality transitioned from" << m_fixquality << "to" << fixquality << "at" << elapsedtime << "seconds";
+        m_fixquality = fixquality;
     }
-    //m_ui->fixquality->setText(QString("%1").arg(m_fixquality));
+    m_ui->fixquality->setText(QString("%1").arg(fixquality));
 }
 
 // ---------------------------------------------------------------------------
@@ -135,7 +144,7 @@ void BasicDisplay::onFixStatus(QChar const& status)
         //qDebug() << "Fix status transitioned from" << QChar(m_fixstatus) << "to" << status << "at" << elapsedtime << "seconds";
         m_fixstatus = status.cell();
     }
-    //m_ui->fixstatus->setText(status);
+    m_ui->fixstatus->setText(status);
 }
 
 // ---------------------------------------------------------------------------
@@ -153,6 +162,7 @@ void BasicDisplay::onFixMode(QChar const& mode)
 void BasicDisplay::onFixType(int fixtype)
 {
     m_fixtype = fixtype;
+    m_ui->fixtype->setText(QString("%1").arg(fixtype));
 }
 
 // ---------------------------------------------------------------------------
@@ -247,6 +257,6 @@ void BasicDisplay::onLogEnableCheckBoxStateChange(int state)
 // ---------------------------------------------------------------------------
 void BasicDisplay::setDateTime()
 {
-    m_ui->datetime->setText(m_datetime->toLocalTime().toString("ddd, dd-MMM-yyyy  hh:mm:ss a"));
+    m_ui->datetime->setText(m_datetime->toLocalTime().toString("dddd   dd-MMM-yyyy   hh:mm:ss a"));
 }
 

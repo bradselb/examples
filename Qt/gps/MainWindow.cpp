@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     connect(decoder, SIGNAL(fixQuality(int)), display, SLOT(onFixQuality(int)));
     connect(decoder, SIGNAL(fixStatus(QChar const&)), display, SLOT(onFixStatus(QChar const&)));
     connect(decoder, SIGNAL(fixMode(QChar const&)), display, SLOT(onFixMode(QChar const&)));
+    connect(decoder, SIGNAL(fixType(int)), display, SLOT(onFixType(int)));
 
     connect(decoder, SIGNAL(pdop(double)), display, SLOT(onPdop(double)));
     connect(decoder, SIGNAL(hdop(double)), display, SLOT(onHdop(double)));
@@ -75,19 +76,26 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     // ----------------------------------------------------------------------
     QToolBar* myToolBar = addToolBar(tr("tools"));
-    QAction* exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcuts(QKeySequence::Quit);
-    exitAct->setStatusTip(tr("Exit the application"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    QAction* quitAct = new QAction(tr("&Quit"), this);
+    quitAct->setShortcuts(QKeySequence::Quit);
+    quitAct->setStatusTip(tr("Quit the application"));
+    connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
+    myToolBar->addAction(quitAct);
 
-    QAction* portAct = new QAction(tr("Port"), this);
-    portAct->setShortcuts(QKeySequence::Print);
-    portAct->setStatusTip(tr("Show the Serial Port Select Dialog"));
-    connect(portAct, SIGNAL(triggered()), portselect, SLOT(show()));
+    // this is a bad idea unless the currently open port can be closed first
+    //QAction* portAct = new QAction(tr("&Port"), this);
+    //portAct->setShortcuts(QKeySequence::Print);
+    //portAct->setStatusTip(tr("Show the Serial Port Select Dialog"));
+    //connect(portAct, SIGNAL(triggered()), portselect, SLOT(show()));
+    //myToolBar->addAction(portAct);
 
-    myToolBar->addAction(portAct);
-    myToolBar->addSeparator();
-    myToolBar->addAction(exitAct);
+    // found a way to attach a key sequence short cut to the push buton
+    // and having both leads to ambiguity and neither works.
+    //QAction* mapAct = new QAction(tr("&Show"), this);
+    //mapAct->setShortcuts(QKeySequence::Save);
+    //mapAct->setStatusTip(tr("Show Position on Map (requires internet connection)"));
+    //connect(mapAct, SIGNAL(triggered()), display, SLOT(onShowOnMapButtonClicked()));
+    //myToolBar->addAction(mapAct);
 
     statusBar()->showMessage("Ready");
 };
