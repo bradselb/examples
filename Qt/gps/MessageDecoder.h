@@ -25,10 +25,10 @@ class MessageDecoder : public QObject
         void gloSatsInView(int); // GNGSV
         void gpsSatsInView(int); // GPGSV
         //void satInView(int prn, int azim, int elev, int snr); // GSV
-        void fixQuality(int); // GGA
-        void fixStatus(QChar const&); // RMC
-        void fixMode(QChar const&); // RMC
-        void fixType(int); // GSA
+        void fixQuality(int); // GGA[6]
+        void fixStatus(QChar const&); // RMC[2]
+        void fixMode(QChar const&); // RMC[12]
+        void fixType(int); // GSA[2]
         void pdop(double); // GSA
         void hdop(double); // GSA, GGA
         void vdop(double); // GSA
