@@ -67,9 +67,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>380</y>
+     <y>370</y>
      <width>590</width>
-     <height>351</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="font">
@@ -106,7 +106,7 @@
       <x>20</x>
       <y>80</y>
       <width>550</width>
-      <height>251</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -405,9 +405,9 @@
    <widget class="QWidget" name="layoutWidget1">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>480</x>
       <y>70</y>
-      <width>85</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -449,7 +449,7 @@
    <widget class="QWidget" name="layoutWidget2">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>480</x>
       <y>40</y>
       <width>91</width>
       <height>21</height>
@@ -481,51 +481,7 @@
         </font>
        </property>
        <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget3">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>40</y>
-      <width>68</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="activeHLayout">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>active</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="inuse">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>0</string>
+        <string>99</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -538,8 +494,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>41</y>
-      <width>69</width>
+      <y>40</y>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
@@ -584,9 +540,9 @@
    <widget class="QWidget" name="layoutWidget5">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>280</x>
       <y>40</y>
-      <width>65</width>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
@@ -631,7 +587,7 @@
    <widget class="QWidget" name="layoutWidget6">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>380</x>
       <y>70</y>
       <width>91</width>
       <height>21</height>
@@ -676,8 +632,8 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>41</y>
-      <width>55</width>
+      <y>40</y>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
@@ -728,8 +684,8 @@
    <widget class="QWidget" name="layoutWidget8">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>70</y>
+      <x>170</x>
+      <y>40</y>
       <width>74</width>
       <height>21</height>
      </rect>
@@ -784,9 +740,9 @@
    <widget class="QWidget" name="layoutWidget9">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>280</x>
       <y>70</y>
-      <width>85</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -817,6 +773,53 @@
        </property>
        <property name="text">
         <string>9.99</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>41</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="activeHLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>active</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="inuse">
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>99</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

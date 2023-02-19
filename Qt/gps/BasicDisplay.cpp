@@ -44,12 +44,6 @@ BasicDisplay::BasicDisplay(QWidget* parent)
     connect(m_ui->siUnitsButton, SIGNAL(toggled(bool)), this, SLOT(onUnitsRadioButtonToggled(bool)));
     connect(m_ui->showOnMapButton, SIGNAL(clicked(bool)), this, SLOT(onShowOnMapButtonClicked()));
 
-    // fix quality is redundant. GGA[6] --> RMC[12] : {0-->N, 1-->A, 2-->D}
-    // fixMode contains the same info and is more easily comprehended.
-    // just hide it for now.
-    m_ui->fixquality->hide();
-    m_ui->fixQualityLabel->hide();
-
 }
 
 // ---------------------------------------------------------------------------

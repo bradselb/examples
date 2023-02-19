@@ -29,6 +29,7 @@ class TrackLogger : public QObject
         double m_hdop; // from GGA
         time_t m_prev;
         int m_activeSats; // from GGA
+        int m_fixQuality; // from GGA
         int m_interval;
         int m_enable;
 
